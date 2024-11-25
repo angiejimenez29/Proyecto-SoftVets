@@ -16,7 +16,6 @@ public class Usuario {
 
     private static Usuario usuarioInstancia;
 
-    // Constructor con parámetros
     public Usuario(int idUsuario, String nombre, String apellido, String telefono, 
                    String tipoUsuario, String usuario, String contrasena) {
         this.idUsuario = idUsuario;
@@ -28,10 +27,8 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    // Constructor sin parámetros
     public Usuario() {}
 
-    // Método para obtener la instancia única
     public static Usuario getInstance() {
         if (usuarioInstancia == null) {
             usuarioInstancia = new Usuario();
@@ -39,7 +36,6 @@ public class Usuario {
         return usuarioInstancia;
     }
 
-    // Verificar que la conexión esté activa
     private boolean verificarConexion() {
         try {
             Connection conexion = Conexion.conectar();  // Obtener conexión desde la clase Conexion
@@ -54,7 +50,6 @@ public class Usuario {
         }
     }
 
-    // Iniciar sesión de usuario
     public Usuario iniciarSesion(String usuarioInput, String contrasenaInput) {
         Usuario usuarioAutenticado = null;
         Connection conexion = Conexion.conectar();  // Obtener la conexión compartida

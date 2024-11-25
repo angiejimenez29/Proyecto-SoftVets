@@ -26,6 +26,7 @@ public class menuAdmin extends javax.swing.JFrame {
         
         cambio.add(new gestionPersonalAdmin(), "GESTION PERSONAL");
         cambio.add(menuPrincipal, "Menu Principal");
+        cambio.add(new gestionClienteAdmin(), "GESTION CLIENTE");
         selectButton(inicio);
         inicioActionPerformed(null);
         
@@ -351,6 +352,7 @@ public class menuAdmin extends javax.swing.JFrame {
 
     private void clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientesActionPerformed
         selectButton(clientes);
+        mostrarPanel("GESTION CLIENTE");
     }//GEN-LAST:event_clientesActionPerformed
     
 

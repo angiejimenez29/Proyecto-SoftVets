@@ -30,11 +30,11 @@ public class iniciarSesion extends javax.swing.JFrame {
                 + "arc:10;"
                 + "showRevealButton:true;"
                 + "showCapsLock:true;"
-                + "borderColor:#F6F6F6;"     // Color del borde normal (rojo en este caso)
+                + "borderColor:#F6F6F6;"
                 + "focusedBorderColor:#00B2B2;");
         txtUser.putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:10;"
-                + "borderColor:#F6F6F6;"     // Color del borde normal (rojo en este caso)
+                + "borderColor:#F6F6F6;"
                 + "focusedBorderColor:#00B2B2;");
 
         txtUser.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Usuario");

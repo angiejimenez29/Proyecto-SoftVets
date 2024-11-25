@@ -9,6 +9,7 @@ public class RegistrarPersonal extends javax.swing.JFrame {
     public RegistrarPersonal() {
         initComponents();
         setLocationRelativeTo(null);
+        //horarios del personal
         fecha.setCloseAfterSelected(true);
         fecha.setEditor(inicioContrato); 
         DatePicker fechaFin = new DatePicker();
