@@ -6,9 +6,11 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JTable;
 
 
 public class Administrador extends Usuario {
+    private int idAdministrador;
     private String email;
     private double salario;
 
@@ -24,7 +26,7 @@ public class Administrador extends Usuario {
         super();
     }
     
-    public boolean registrar() {
+    public boolean registrarAdmin() {
         boolean exito = false;
         Connection conexion = Conexion.conectar(); 
         try {
@@ -76,28 +78,25 @@ public class Administrador extends Usuario {
         Connection conexion = Conexion.conectar();
 
         try {
-            String sql = "SELECT u.nombre, u.apellido, u.telefono, a.email, a.salario " +
-                         "FROM Usuario u " +
-                         "JOIN Administrador a ON u.idUsuario = a.Usuario_idUsuario";
+            String sql = """
+                            SELECT a.idAdministrador, u.idUsuario, u.nombre, u.apellido, u.telefono, a.email, a.salario
+                            FROM Administrador a
+                            JOIN Usuario u ON a.Usuario_idUsuario = u.idUsuario
+                        """;
             PreparedStatement pst = conexion.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
 
             // Recorrer los resultados y agregar a la lista
             while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                String apellido = rs.getString("apellido");
-                String telefono = rs.getString("telefono");
-                String email = rs.getString("email");
-                double salario = rs.getDouble("salario");
-
-                Administrador admin = new Administrador();
-                admin.setNombre(nombre);
-                admin.setApellido(apellido);
-                admin.setTelefono(telefono);
-                admin.setEmail(email);
-                admin.setSalario(salario);
-
-                administradores.add(admin);
+               Administrador admin = new Administrador();
+               admin.setIdAdministrador(rs.getInt("idAdministrador")); // Establecer ID del administrador
+               admin.setIdUsuario(rs.getInt("idUsuario"));             // Establecer ID del usuario
+               admin.setNombre(rs.getString("nombre"));
+               admin.setApellido(rs.getString("apellido"));
+               admin.setTelefono(rs.getString("telefono"));
+               admin.setEmail(rs.getString("email"));
+               admin.setSalario(rs.getDouble("salario"));
+               administradores.add(admin);
             }
             rs.close();
             pst.close();
@@ -107,13 +106,14 @@ public class Administrador extends Usuario {
 
         return administradores;
     }
-   
+    
     public boolean actualizarEmail(String nuevoEmail) {
         boolean actualizado = false;
         Connection conexion = Conexion.conectar();
 
         try {
             String sql = "UPDATE Administrador SET email = ? WHERE Usuario_idUsuario = ?";
+            System.out.println("SQL: " + sql);  // Depuración
             PreparedStatement pst = conexion.prepareStatement(sql);
             pst.setString(1, nuevoEmail);
             pst.setInt(2, this.getIdUsuario());
@@ -153,6 +153,83 @@ public class Administrador extends Usuario {
 
         return actualizado;
     }
+    
+    public boolean actualizarAdmin(String nuevoNombre, String nuevoApellido, String nuevoTelefono, String nuevoEmail, double nuevoSalario, int idUsuario) {
+        boolean actualizado = false;
+        Connection conexion = Conexion.conectar();
+
+        try {
+            conexion.setAutoCommit(false);
+            String sqlUsuario = "UPDATE Usuario SET nombre = ?, apellido = ?, telefono = ? WHERE idUsuario = ?";
+            PreparedStatement pstUsuario = conexion.prepareStatement(sqlUsuario);
+            pstUsuario.setString(1, nuevoNombre);
+            pstUsuario.setString(2, nuevoApellido);
+            pstUsuario.setString(3, nuevoTelefono);
+            pstUsuario.setInt(4, idUsuario);
+
+            String sqlAdministrador = "UPDATE Administrador SET email = ?, salario = ? WHERE Usuario_idUsuario = ?";
+            PreparedStatement pstAdministrador = conexion.prepareStatement(sqlAdministrador);
+            pstAdministrador.setString(1, nuevoEmail);
+            pstAdministrador.setDouble(2, nuevoSalario);
+            pstAdministrador.setInt(3, idUsuario);
+
+            int filasAfectadasUsuario = pstUsuario.executeUpdate();
+            int filasAfectadasAdministrador = pstAdministrador.executeUpdate();
+
+            if (filasAfectadasUsuario > 0 && filasAfectadasAdministrador > 0) {
+                conexion.commit();  // Confirma los cambios en ambas tablas
+                actualizado = true;
+            } else {
+                conexion.rollback();  // Revierte los cambios si no se actualizó alguna fila
+            }
+
+            // Cierra los statements
+            pstUsuario.close();
+            pstAdministrador.close();
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar los datos del administrador y usuario: " + e.getMessage());
+            try {
+                conexion.rollback();  // En caso de error, se revierte la transacción
+            } catch (SQLException ex) {
+                System.err.println("Error al revertir los cambios: " + ex.getMessage());
+            }
+        } finally {
+            try {
+                conexion.setAutoCommit(true);  // Vuelve a activar el modo de autocommit
+            } catch (SQLException e) {
+                System.err.println("Error al restaurar el autocommit: " + e.getMessage());
+            }
+        }
+
+        return actualizado;
+    }
+        
+    public boolean eliminarAdmin(int idUsuario) {
+        boolean eliminado = false;
+        Connection conexion = Conexion.conectar();
+
+        try {
+            String sqlAdministrador = "DELETE FROM Administrador WHERE Usuario_idUsuario = ?";
+            PreparedStatement pstAdministrador = conexion.prepareStatement(sqlAdministrador);
+            pstAdministrador.setInt(1, idUsuario);
+
+            int filasAfectadas = pstAdministrador.executeUpdate();
+            if (filasAfectadas > 0) {
+                // Luego eliminamos al usuario de la tabla 'Usuario'
+                String sqlUsuario = "DELETE FROM Usuario WHERE idUsuario = ?";
+                PreparedStatement pstUsuario = conexion.prepareStatement(sqlUsuario);
+                pstUsuario.setInt(1, idUsuario);
+                pstUsuario.executeUpdate();
+
+                eliminado = true;
+            }
+            pstAdministrador.close();
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar el administrador: " + e.getMessage());
+        }
+        return eliminado;
+    }
+   
 
     public String getEmail() {
         return email;
@@ -168,5 +245,12 @@ public class Administrador extends Usuario {
 
     public void setSalario(double salario) {
         this.salario = salario;
+    }
+
+    public int getIdAdministrador() {
+        return idAdministrador;
+    }
+    public void setIdAdministrador(int idAdministrador) {
+        this.idAdministrador = idAdministrador;
     }
 }

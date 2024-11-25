@@ -12,7 +12,7 @@ public class Conexion {
     private static final String ip = "bqsw3lczrwzt3abas1po-mysql.services.clever-cloud.com";
     private static final String puerto = "3306";
     private static final String driver = "com.mysql.cj.jdbc.Driver";
-    private static final String cadena = "jdbc:mysql://" + ip + ":" + puerto + "/" + db;
+    private static final String cadena = "jdbc:mysql://" + ip + ":" + puerto + "/" + db + "?connectTimeout=180000";
 
     // Constructor privado para evitar instanciación externa
     private Conexion() {}
