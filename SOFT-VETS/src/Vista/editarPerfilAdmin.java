@@ -6,25 +6,43 @@ import Modelo.Administrador;
 import Modelo.Usuario;
 import com.formdev.flatlaf.FlatClientProperties;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class editarPerfilAdmin extends javax.swing.JPanel {
     private ControladorUsuario usuarioControlador;
     private ControladorAdministrador administradorControlador;
     private Usuario usuarioAutenticado;
+    private menuAdmin menuAdmin;
+    private String originalNombre;
+    private String originalApellido;
+    private String originalTelefono;
+    private String originalEmail;
+    private String originalContrasena;
+
+    
 
 
-    public editarPerfilAdmin(Usuario usuario) {
+    public editarPerfilAdmin(Usuario usuario, menuAdmin menuAdmin) {
         this.usuarioAutenticado = usuario;
+        this.menuAdmin = menuAdmin; 
         initComponents();
-
-        txtNombre.putClientProperty(FlatClientProperties.STYLE, "arc:10"); 
-        txtApellido.putClientProperty(FlatClientProperties.STYLE, "arc:10");
+        
+        JTextField[] campos = {txtNombre, txtApellido, txtTelefono, txtEmail};
+        for (JTextField campo : campos) {
+            campo.putClientProperty(FlatClientProperties.STYLE, " "
+                + "arc:10;"
+                + "borderColor:#F6F6F6;"
+                + "focusedBorderColor:#00B2B2;"
+                + "font:Roboto,plain,14;"   
+            );
+        }
         txtContraseña.putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:10;"
                 + "showRevealButton:true;"
-                + "showCapsLock:true;"); 
-        txtEmail.putClientProperty(FlatClientProperties.STYLE, "arc:10"); 
-        txtTelefono.putClientProperty(FlatClientProperties.STYLE, "arc:10");
+                + "borderColor:#F6F6F6;"
+                + "focusedBorderColor:#00B2B2;"
+                + "showCapsLock:true;"
+                + "font:Roboto,plain,14;"); 
         panelPerfil.putClientProperty(FlatClientProperties.STYLE , ""
                 + "arc:25;"
         );
@@ -61,88 +79,110 @@ public class editarPerfilAdmin extends javax.swing.JPanel {
         editarPerfil.add(icono);
         icono.setBounds(650, 30, 140, 140);
 
-        panelPerfil.setBackground(new java.awt.Color(255, 255, 255));
-        panelPerfil.setLayout(null);
+        panelPerfil.setBackground(new java.awt.Color(209, 209, 209));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Nombre");
-        panelPerfil.add(jLabel1);
-        jLabel1.setBounds(70, 40, 83, 40);
 
         txtNombre.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        panelPerfil.add(txtNombre);
-        txtNombre.setBounds(70, 90, 170, 26);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Apellido");
-        panelPerfil.add(jLabel2);
-        jLabel2.setBounds(280, 40, 121, 40);
 
         txtApellido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtApellido.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtApellidoActionPerformed(evt);
-            }
-        });
-        panelPerfil.add(txtApellido);
-        txtApellido.setBounds(280, 90, 170, 26);
 
         txtTelefono.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtTelefono.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtTelefonoActionPerformed(evt);
-            }
-        });
-        panelPerfil.add(txtTelefono);
-        txtTelefono.setBounds(70, 260, 380, 26);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Contraseña");
-        panelPerfil.add(jLabel3);
-        jLabel3.setBounds(70, 300, 104, 34);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel4.setText("Email");
-        panelPerfil.add(jLabel4);
-        jLabel4.setBounds(70, 130, 63, 34);
 
         txtEmail.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        panelPerfil.add(txtEmail);
-        txtEmail.setBounds(70, 170, 380, 26);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setText("Telefono");
-        panelPerfil.add(jLabel5);
-        jLabel5.setBounds(70, 210, 105, 34);
 
         btnCancelar.setBackground(new java.awt.Color(204, 204, 204));
-        btnCancelar.setFont(new java.awt.Font("Segoe UI Semibold", 1, 20)); // NOI18N
+        btnCancelar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         btnCancelar.setText("Cancelar");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
             }
         });
-        panelPerfil.add(btnCancelar);
-        btnCancelar.setBounds(70, 410, 170, 34);
 
         btnGuardar.setBackground(new java.awt.Color(204, 204, 204));
-        btnGuardar.setFont(new java.awt.Font("Segoe UI Semibold", 1, 20)); // NOI18N
+        btnGuardar.setFont(new java.awt.Font("Segoe UI Semibold", 0, 18)); // NOI18N
         btnGuardar.setText("Guardar");
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGuardarActionPerformed(evt);
             }
         });
-        panelPerfil.add(btnGuardar);
-        btnGuardar.setBounds(290, 410, 160, 34);
 
-        txtContraseña.setText("jPasswordField1");
-        panelPerfil.add(txtContraseña);
-        txtContraseña.setBounds(70, 350, 380, 30);
+        javax.swing.GroupLayout panelPerfilLayout = new javax.swing.GroupLayout(panelPerfil);
+        panelPerfil.setLayout(panelPerfilLayout);
+        panelPerfilLayout.setHorizontalGroup(
+            panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPerfilLayout.createSequentialGroup()
+                .addGap(60, 60, 60)
+                .addGroup(panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelPerfilLayout.createSequentialGroup()
+                        .addGroup(panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addGroup(panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelPerfilLayout.createSequentialGroup()
+                            .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtContraseña, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(60, 60, 60))
+        );
+        panelPerfilLayout.setVerticalGroup(
+            panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPerfilLayout.createSequentialGroup()
+                .addGap(55, 55, 55)
+                .addGroup(panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelPerfilLayout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(20, 20, 20)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addGroup(panelPerfilLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnGuardar))
+                .addGap(88, 88, 88))
+        );
 
         editarPerfil.add(panelPerfil);
-        panelPerfil.setBounds(140, 170, 510, 490);
+        panelPerfil.setBounds(190, 170, 440, 450);
 
         icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Pen Squared.png"))); // NOI18N
         editarPerfil.add(icon);
@@ -169,14 +209,6 @@ public class editarPerfilAdmin extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtApellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtApellidoActionPerformed
-
-    private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtTelefonoActionPerformed
-
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         
         String nombre = txtNombre.getText();
@@ -194,27 +226,42 @@ public class editarPerfilAdmin extends javax.swing.JPanel {
             ControladorAdministrador controladorAdministrador = new ControladorAdministrador((Administrador) usuarioAutenticado);
             controladorAdministrador.actualizarEmail(email);
         }
+        
+        menuAdmin.actualizarNombreApellido(nombre, apellido);
 
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
+        txtNombre.setText(originalNombre);
+        txtApellido.setText(originalApellido);
+        txtTelefono.setText(originalTelefono);
+        txtContraseña.setText(originalContrasena);
+
+        if (usuarioAutenticado instanceof Administrador) {
+            txtEmail.setText(originalEmail);
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
     
     public void usuarioInfo(){
         if (usuarioAutenticado != null) {
-            txtNombre.setText(usuarioAutenticado.getNombre());
-            txtApellido.setText(usuarioAutenticado.getApellido());
-            txtTelefono.setText(usuarioAutenticado.getTelefono());
-            txtContraseña.setText(usuarioAutenticado.getContrasena());
+        originalNombre = usuarioAutenticado.getNombre();
+        originalApellido = usuarioAutenticado.getApellido();
+        originalTelefono = usuarioAutenticado.getTelefono();
+        originalContrasena = usuarioAutenticado.getContrasena();
 
-            if (usuarioAutenticado instanceof Administrador) {
-                Administrador admin = (Administrador) usuarioAutenticado;
-                txtEmail.setText(admin.getEmail());  // Mostrar el emailtxtEmail.setText(((Administrador) usuarioAutenticado).getEmail());
-            } else {
-                txtEmail.setEnabled(false); // Deshabilita el campo si no es un administrador
-            }
+        if (usuarioAutenticado instanceof Administrador) {
+            Administrador admin = (Administrador) usuarioAutenticado;
+            originalEmail = admin.getEmail();
+            txtEmail.setText(originalEmail);
+        } else {
+            txtEmail.setEnabled(false);
         }
+
+        txtNombre.setText(originalNombre);
+        txtApellido.setText(originalApellido);
+        txtTelefono.setText(originalTelefono);
+        txtContraseña.setText(originalContrasena);
+    }
     }      
     
 

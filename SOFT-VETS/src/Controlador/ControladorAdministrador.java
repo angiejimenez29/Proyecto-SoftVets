@@ -27,7 +27,7 @@ public class ControladorAdministrador {
 
         DefaultTableModel modelo = new DefaultTableModel(
             new Object[][] {},
-            new String[] {"IDA", "IDU", "Nombre", "Teléfono", "Email", "Salario"}
+            new String[] {"IDA", "IDU", "NOMBRE", "TELEFONO", "EMAIL", "SALARIO"}
         ) {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -72,27 +72,23 @@ public class ControladorAdministrador {
     }
     
     public void buscarAdmin(String nombreBuscar, JTable tablaAdmin) {
-// Filtrar los administradores por el nombre en la columna "Nombre"
     List<Administrador> administradoresFiltrados = Administrador.obtenerAdministradores().stream()
         .filter(admin -> {
-            // Filtrar solo si el nombre completo del administrador contiene el texto de búsqueda
             String nombreCompleto = admin.getNombre() + " " + admin.getApellido();
             return nombreCompleto.toLowerCase().contains(nombreBuscar.toLowerCase());
         })
         .collect(Collectors.toList());
 
-    // Crear el modelo para la tabla
     DefaultTableModel modelo = new DefaultTableModel(
         new Object[][] {},
-        new String[] {"IDA", "IDU", "Nombre", "Telefono", "Email", "Salario"}
+        new String[] {"IDA", "IDU", "NOMBRE", "TELEFONO", "EMAIL", "SALARIO"}
     ) {
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return false;  // No editable
+            return false;
         }
     };
 
-    // Agregar los administradores filtrados a la tabla
     for (Administrador admin : administradoresFiltrados) {
         String telefono = admin.getTelefono() != null ? admin.getTelefono() : "Sin teléfono";
         Object[] fila = new Object[] {
@@ -106,33 +102,28 @@ public class ControladorAdministrador {
         modelo.addRow(fila);
     }
 
-    // Actualizar la tabla con el modelo
     tablaAdmin.setModel(modelo);
 
-    // Ajustar el tamaño de las columnas
-    tablaAdmin.getColumnModel().getColumn(0).setPreferredWidth(0);  // IDA
-    tablaAdmin.getColumnModel().getColumn(1).setPreferredWidth(0);  // IDU
-    tablaAdmin.getColumnModel().getColumn(2).setPreferredWidth(150); // Nombre
-    tablaAdmin.getColumnModel().getColumn(3).setPreferredWidth(100); // Teléfono
-    tablaAdmin.getColumnModel().getColumn(4).setPreferredWidth(150); // Email
-    tablaAdmin.getColumnModel().getColumn(5).setPreferredWidth(100); // Salario
+    tablaAdmin.getColumnModel().getColumn(0).setPreferredWidth(0); 
+    tablaAdmin.getColumnModel().getColumn(1).setPreferredWidth(0);  
+    tablaAdmin.getColumnModel().getColumn(2).setPreferredWidth(150);
+    tablaAdmin.getColumnModel().getColumn(3).setPreferredWidth(100);
+    tablaAdmin.getColumnModel().getColumn(4).setPreferredWidth(150); 
+    tablaAdmin.getColumnModel().getColumn(5).setPreferredWidth(100);
 
-    // Ocultar las columnas IDA (0) y IDU (1) completamente
     tablaAdmin.getColumnModel().getColumn(0).setMaxWidth(0);  // IDA
     tablaAdmin.getColumnModel().getColumn(0).setMinWidth(0);  // IDA
     tablaAdmin.getColumnModel().getColumn(1).setMaxWidth(0);  // IDU
     tablaAdmin.getColumnModel().getColumn(1).setMinWidth(0);  // IDU
-    tablaAdmin.getColumnModel().getColumn(0).setResizable(false);  // Deshabilitar redimensionamiento para IDA
-    tablaAdmin.getColumnModel().getColumn(1).setResizable(false);  // Deshabilitar redimensionamiento para IDU
+    tablaAdmin.getColumnModel().getColumn(0).setResizable(false); 
+    tablaAdmin.getColumnModel().getColumn(1).setResizable(false); 
 
-    // Alinear el contenido de la tabla al centro
     DefaultTableCellRenderer centroRenderer = new DefaultTableCellRenderer();
     centroRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
     for (int i = 0; i < tablaAdmin.getColumnCount(); i++) {
         tablaAdmin.getColumnModel().getColumn(i).setCellRenderer(centroRenderer);
     }
 }
-
 
     public void eliminarAdministrador(int idUsuario) {
         boolean exito = administrador.eliminarAdmin(idUsuario);

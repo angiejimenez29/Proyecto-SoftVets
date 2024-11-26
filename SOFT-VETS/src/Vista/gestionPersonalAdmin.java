@@ -2,6 +2,7 @@ package Vista;
 
 import Controlador.ControladorAdministrador;
 import Modelo.Administrador;
+import Modelo.Cliente;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.CardLayout;
 import java.util.List;
@@ -63,8 +64,8 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
                 + "trackInsets:3,3,3,3;"
                 + "thumbInsets:3,3,3,3;"
                 + "background:$Table.background;");
-        txtBuscar.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Buscar...");
-        txtBuscar.putClientProperty(FlatClientProperties.STYLE, ""
+        txtBuscarPersonal.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Buscar...");
+        txtBuscarPersonal.putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:15;"
                 + "borderWidth:0;"
                 + "focusWidth:0;"
@@ -107,6 +108,8 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
                 + "arc:25;");
         editarAdmin.putClientProperty(FlatClientProperties.STYLE , ""
                 + "arc:25;");
+        txtBuscarAdmin.setFont(new java.awt.Font("Roboto", java.awt.Font.PLAIN, 14));
+        txtBuscarPersonal.setFont(new java.awt.Font("Roboto", java.awt.Font.PLAIN, 14));
 
 
     JTextField[] campos = {txtContraseña, txtnombre, txtApellido, txtSalario, txtTelefono, txtEmail, 
@@ -132,7 +135,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         scroll = new javax.swing.JScrollPane();
         tablaPersonal = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
-        txtBuscar = new javax.swing.JTextField();
+        txtBuscarPersonal = new javax.swing.JTextField();
         Eliminar = new javax.swing.JButton();
         Nuevo = new javax.swing.JButton();
         Editar = new javax.swing.JButton();
@@ -154,13 +157,12 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         txtTelefono1 = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         txtSalario1 = new javax.swing.JFormattedTextField();
-        Actualizar = new javax.swing.JButton();
+        guardarEdicion = new javax.swing.JButton();
         cancelarEdicion = new javax.swing.JButton();
         txtEmail1 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         txtApellido1 = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
         registrarAdmin = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtnombre = new javax.swing.JTextField();
@@ -243,14 +245,14 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         personalTabla.add(jSeparator1);
         jSeparator1.setBounds(0, 50, 760, 30);
 
-        txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarPersonal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscarPersonal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarActionPerformed(evt);
+                txtBuscarPersonalPersonalActionPerformed(evt);
             }
         });
-        personalTabla.add(txtBuscar);
-        txtBuscar.setBounds(60, 10, 220, 30);
+        personalTabla.add(txtBuscarPersonal);
+        txtBuscarPersonal.setBounds(60, 10, 220, 30);
 
         Eliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Eliminar.setText("Eliminar");
@@ -289,40 +291,40 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
 
         tablaAdmin.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "IDA", "IDU", "Nombre", "Telefono", "Email", "Salario"
+                "Nombre", "Telefono", "Email", "Salario"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                true, true, false, false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -407,10 +409,10 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
 
         txtSalario1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.##"))));
 
-        Actualizar.setText("Guardar");
-        Actualizar.addActionListener(new java.awt.event.ActionListener() {
+        guardarEdicion.setText("Guardar");
+        guardarEdicion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ActualizarActionPerformed(evt);
+                guardarEdicionActionPerformed(evt);
             }
         });
 
@@ -428,8 +430,6 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel14.setText("Apellido");
         jLabel14.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        jLabel15.setText("EDITAR");
 
         javax.swing.GroupLayout editarAdminLayout = new javax.swing.GroupLayout(editarAdmin);
         editarAdmin.setLayout(editarAdminLayout);
@@ -465,19 +465,13 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
                         .addContainerGap(52, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, editarAdminLayout.createSequentialGroup()
                         .addGap(11, 11, 11)
-                        .addComponent(Actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(guardarEdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(207, 207, 207))))
-            .addGroup(editarAdminLayout.createSequentialGroup()
-                .addGap(332, 332, 332)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         editarAdminLayout.setVerticalGroup(
             editarAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editarAdminLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(46, 46, 46)
                 .addGroup(editarAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
@@ -496,7 +490,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
                 .addGap(40, 40, 40)
                 .addGroup(editarAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelarEdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Actualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(guardarEdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
 
@@ -641,7 +635,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(14, Short.MAX_VALUE)
                 .addComponent(gestionPersonalAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 691, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(15, 15, 15))
         );
@@ -651,49 +645,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         CardLayout cl = (CardLayout) cambio.getLayout();
         cl.show(cambio, panelName);
     }
-    
-    public void mostrarAdministradores(List<Administrador> administradores) {   
-        DefaultTableModel modelo = new DefaultTableModel(
-            new Object[][] {},
-            new String[] {"IDA", "IDU", "Nombre", "Telefono", "Email", "Salario"} // Incluye el ID aquí
-        ){
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return false;
-            }
-        };
-
-        for (Administrador admin : administradores) {
-            String telefono = admin.getTelefono() != null ? admin.getTelefono() : "Sin teléfono";
-            Object[] fila = new Object[] {
-                admin.getIdAdministrador(),
-                admin.getIdUsuario(),
-                admin.getNombre() + " " + admin.getApellido(),
-                admin.getTelefono(),
-                admin.getEmail(),
-                admin.getSalario()
-            };
-            modelo.addRow(fila);
-        }
-
-        tablaAdmin.setModel(modelo);
-
-        tablaAdmin.getColumnModel().getColumn(0).setPreferredWidth(50);  // IDA
-        tablaAdmin.getColumnModel().getColumn(1).setPreferredWidth(50);  // IDU
-        tablaAdmin.getColumnModel().getColumn(2).setPreferredWidth(150); // Nombre
-        tablaAdmin.getColumnModel().getColumn(3).setPreferredWidth(100); // Telefono
-        tablaAdmin.getColumnModel().getColumn(4).setPreferredWidth(150); // Email
-        tablaAdmin.getColumnModel().getColumn(5).setPreferredWidth(100); // Salario
-
-        // Alinear contenido al centro
-        DefaultTableCellRenderer centroRenderer = new DefaultTableCellRenderer();
-        centroRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-        
-        for (int i = 0; i < tablaAdmin.getColumnCount(); i++) {
-            tablaAdmin.getColumnModel().getColumn(i).setCellRenderer(centroRenderer);
-        }
-    }
-    
+       
     private void iniciarEdicion(int idUsuario) {
         nombreOriginal = txtNombre1.getText();
         apellidoOriginal = txtApellido1.getText();
@@ -702,9 +654,9 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         salarioOriginal = Double.parseDouble(txtSalario1.getText().replace(",", ""));  // Limpiar comas y convertir
     }
     
-    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+    private void txtBuscarPersonalPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarPersonalPersonalActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarActionPerformed
+    }//GEN-LAST:event_txtBuscarPersonalPersonalActionPerformed
 
     private void EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarActionPerformed
         // TODO add your handling code here:
@@ -762,21 +714,24 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
             }
         String email = txtEmail.getText();
         String telefono = txtTelefono.getText();
-  
-        Administrador admin = new Administrador(0, nombre, apellido, telefono, "administrador", null, contrasena, email, salario);
-
-        if (admin.registrarAdmin()) {
-            JOptionPane.showMessageDialog(this, "Administrador registrado exitosamente.");
-            controlador.mostrarAdministradores(tablaAdmin);
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al registrar el administrador.");
-        }
+        
+        if(nombre.isEmpty() || apellido.isEmpty() ||contrasena.isEmpty() || telefono.isEmpty() || email.isEmpty() || salarioStr.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos.");
+        }else{
+            Administrador admin = new Administrador(0, nombre, apellido, telefono, "administrador", null, contrasena, email, salario);
+            if (admin.registrarAdmin()) {
+                JOptionPane.showMessageDialog(this, "Administrador registrado exitosamente.");
+                controlador.mostrarAdministradores(tablaAdmin);
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al registrar el administrador.");
+            }
+        }  
     }//GEN-LAST:event_RegistrarActionPerformed
 
-    private void ActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActualizarActionPerformed
+    private void guardarEdicionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarEdicionActionPerformed
         guardarDatosAdministrador(idUsuarioSeleccionado);
         controlador.mostrarAdministradores(tablaAdmin);
-    }//GEN-LAST:event_ActualizarActionPerformed
+    }//GEN-LAST:event_guardarEdicionActionPerformed
 
     private void EditarAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarAdminActionPerformed
         mostrarPanel("EDITAR");
@@ -785,6 +740,8 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         txtTelefono1.setEnabled(true);
         txtEmail1.setEnabled(true);
         txtSalario1.setEnabled(true);
+        cancelarEdicion.setEnabled(true);
+        guardarEdicion.setEnabled(true);
     }//GEN-LAST:event_EditarAdminActionPerformed
 
     private void tablaAdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAdminMouseClicked
@@ -818,6 +775,9 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         txtTelefono1.setEnabled(false);
         txtEmail1.setEnabled(false);
         txtSalario1.setEnabled(false);
+        
+        cancelarEdicion.setEnabled(false);
+        guardarEdicion.setEnabled(false);
         
         txtnombre.setText(nombre);
         txtApellido.setText(apellido);
@@ -884,7 +844,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
             return;
         }
 
-       controlador.actualizarAdministrador(nombre, apellido, telefono, email, salario, idUsuario);
+        controlador.actualizarAdministrador(nombre, apellido, telefono, email, salario, idUsuario);
         nombreOriginal = nombre;
         apellidoOriginal = apellido;
         telefonoOriginal = telefono;
@@ -893,7 +853,6 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Actualizar;
     private javax.swing.JButton Editar;
     private javax.swing.JButton EditarAdmin;
     private javax.swing.JButton Eliminar;
@@ -908,11 +867,11 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     private javax.swing.JButton cancelarRegistro;
     private javax.swing.JPanel editarAdmin;
     private javax.swing.JPanel gestionPersonalAdmin;
+    private javax.swing.JButton guardarEdicion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -932,8 +891,8 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     private javax.swing.JTable tablaPersonal;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtApellido1;
-    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtBuscarAdmin;
+    private javax.swing.JTextField txtBuscarPersonal;
     private javax.swing.JPasswordField txtContraseña;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtEmail1;

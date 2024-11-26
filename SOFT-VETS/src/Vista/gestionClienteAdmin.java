@@ -1,30 +1,42 @@
 package Vista;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import Controlador.ControladorCliente;
+import Modelo.Administrador;
+import Modelo.Cliente;
+import com.formdev.flatlaf.FlatClientProperties;
+import java.awt.CardLayout;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 public class gestionClienteAdmin extends javax.swing.JPanel {
-
-    /**
-     * Creates new form gestionClienteAdmin
-     */
+    private ControladorCliente controlador;
+    private Cliente cliente;
+    private Integer idUsuarioSeleccionado;
+    private String nombreOriginal, apellidoOriginal, telefonoOriginal, emailOriginal;
+    
     public gestionClienteAdmin() {
         initComponents();
         init();
+        controlador = new ControladorCliente(new Cliente());
+        controlador.mostrarClientes(tablaClientes);      
     }
-
 
     private void init(){
         clienteTabla.putClientProperty(FlatClientProperties.STYLE , ""
                 + "arc:25;"
                 + "background:$Table.background"
         );
-        tablaCliente.getTableHeader().putClientProperty(FlatClientProperties.STYLE, ""
+        tablaClientes.getTableHeader().putClientProperty(FlatClientProperties.STYLE, ""
                 + "height:35;"
                 + "hoverBackground:null;"
                 + "pressedBackground:null;"
                 + "separatorColor:$TableHeader.background;"
                 + "font:bold;");
-        tablaCliente.putClientProperty(FlatClientProperties.STYLE, ""
+        tablaClientes.putClientProperty(FlatClientProperties.STYLE, ""
                 + "rowHeight:30;"
                 + "showHorizontalLines:true;"
                 + "intercellSpacing:0,1;"
@@ -43,7 +55,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
                 + "focusWidth:0;"
                 + "innerFocusWidth:0;"
                 + "background:$Panel.background");
-   
+        txtBuscar.setFont(new java.awt.Font("Roboto", java.awt.Font.PLAIN, 14));
         
     }
     @SuppressWarnings("unchecked")
@@ -54,7 +66,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
         gestionPersonalAdmin = new javax.swing.JPanel();
         clienteTabla = new javax.swing.JPanel();
         scroll = new javax.swing.JScrollPane();
-        tablaCliente = new javax.swing.JTable();
+        tablaClientes = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
         txtBuscar = new javax.swing.JTextField();
         Eliminar = new javax.swing.JButton();
@@ -71,61 +83,54 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
 
         scroll.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        tablaCliente.setModel(new javax.swing.table.DefaultTableModel(
+        tablaClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "", "Nombre", "Especialidad", "Telefono", "Contrato", "Horario", "Salario"
+                "Nombre", "Telefono", "Email", "Fecha Registro"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false, false
+                false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        scroll.setViewportView(tablaCliente);
+        scroll.setViewportView(tablaClientes);
 
         clienteTabla.add(scroll);
-        scroll.setBounds(0, 50, 790, 570);
+        scroll.setBounds(0, 130, 780, 520);
         clienteTabla.add(jSeparator1);
-        jSeparator1.setBounds(0, 50, 760, 30);
+        jSeparator1.setBounds(0, 120, 770, 30);
 
         txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,7 +139,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
             }
         });
         clienteTabla.add(txtBuscar);
-        txtBuscar.setBounds(60, 10, 220, 30);
+        txtBuscar.setBounds(60, 80, 220, 30);
 
         Eliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Eliminar.setText("Eliminar");
@@ -144,7 +149,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
             }
         });
         clienteTabla.add(Eliminar);
-        Eliminar.setBounds(620, 10, 110, 30);
+        Eliminar.setBounds(620, 80, 110, 30);
 
         Nuevo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Nuevo.setText("Nuevo");
@@ -154,41 +159,38 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
             }
         });
         clienteTabla.add(Nuevo);
-        Nuevo.setBounds(360, 10, 110, 30);
+        Nuevo.setBounds(360, 80, 110, 30);
 
         Editar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Editar.setText("Editar");
         clienteTabla.add(Editar);
-        Editar.setBounds(490, 10, 110, 30);
+        Editar.setBounds(490, 80, 110, 30);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Search_1.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Google Web Search_1.png"))); // NOI18N
         clienteTabla.add(jLabel2);
-        jLabel2.setBounds(20, 15, 30, 30);
+        jLabel2.setBounds(20, 80, 30, 30);
 
-        editarperfil.setFont(new java.awt.Font("Segoe UI Semibold", 0, 24)); // NOI18N
-        editarperfil.setText("Clientes");
+        editarperfil.setFont(new java.awt.Font("Segoe UI Semibold", 1, 24)); // NOI18N
+        editarperfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Contact Us.png"))); // NOI18N
+        editarperfil.setText(" CLIENTES");
+        clienteTabla.add(editarperfil);
+        editarperfil.setBounds(20, 10, 179, 59);
 
         javax.swing.GroupLayout gestionPersonalAdminLayout = new javax.swing.GroupLayout(gestionPersonalAdmin);
         gestionPersonalAdmin.setLayout(gestionPersonalAdminLayout);
         gestionPersonalAdminLayout.setHorizontalGroup(
             gestionPersonalAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gestionPersonalAdminLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(clienteTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 790, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(gestionPersonalAdminLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(editarperfil, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(clienteTabla, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                .addContainerGap())
         );
         gestionPersonalAdminLayout.setVerticalGroup(
             gestionPersonalAdminLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gestionPersonalAdminLayout.createSequentialGroup()
-                .addContainerGap(12, Short.MAX_VALUE)
-                .addComponent(editarperfil, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(clienteTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 604, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+            .addGroup(gestionPersonalAdminLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(clienteTabla, javax.swing.GroupLayout.PREFERRED_SIZE, 679, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -204,8 +206,8 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(gestionPersonalAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 691, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addComponent(gestionPersonalAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 684, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -229,9 +231,17 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    
     private void NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NuevoActionPerformed
-        new RegistrarCliente().setVisible(true);
+        administrarCliente registrarCliente = new administrarCliente();
+            registrarCliente.setVisible(true);
+            registrarCliente.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    controlador.mostrarClientes(tablaClientes);
+                }
+            });
     }//GEN-LAST:event_NuevoActionPerformed
 
     private void EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarActionPerformed
@@ -254,7 +264,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JScrollPane scroll;
-    private javax.swing.JTable tablaCliente;
+    private javax.swing.JTable tablaClientes;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

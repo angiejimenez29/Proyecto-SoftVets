@@ -98,11 +98,6 @@ public class iniciarSesion extends javax.swing.JFrame {
                 txtUserMousePressed(evt);
             }
         });
-        txtUser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUserActionPerformed(evt);
-            }
-        });
 
         contraseñatxt.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         contraseñatxt.setText("Contraseña");
@@ -110,11 +105,6 @@ public class iniciarSesion extends javax.swing.JFrame {
         txtPass.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 txtPassMousePressed(evt);
-            }
-        });
-        txtPass.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPassActionPerformed(evt);
             }
         });
 
@@ -200,19 +190,10 @@ public class iniciarSesion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
        
-    private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUserActionPerformed
-
-    private void txtPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPassActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPassActionPerformed
-
     private void txtUserMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUserMousePressed
 
     }//GEN-LAST:event_txtUserMousePressed
-    
-    
+
     private void txtPassMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtPassMousePressed
 
     }//GEN-LAST:event_txtPassMousePressed

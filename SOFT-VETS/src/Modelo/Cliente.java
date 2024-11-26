@@ -2,129 +2,228 @@ package Modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-public class Cliente {
 
+public class Cliente extends Usuario{
     private int idCliente;
-    private int Usuario_idUsuario;
     private String email;
     private String fechaRegistro;
-    private Connection conexion;
 
+    public Cliente(int idUsuario, String nombre, String apellido, String telefono, String tipoUsuario, String usuario, String contrasena, String email, String fechaRegistro) {
+        super(idUsuario, nombre, apellido, telefono, tipoUsuario, usuario, contrasena);
+        this.email = email;
+        this.fechaRegistro = fechaRegistro;
+    }
+    
     public Cliente() {
-        
+        super();
     }
 
-    // Método para registrar un nuevo cliente
-    public boolean registrarCliente(int idUsuario, String email) {
+    public boolean registrarCliente() {
+        boolean exito = false;
+        Connection conexion = Conexion.conectar();
         try {
-            String sql = "INSERT INTO Cliente (Usuario_idUsuario, email) VALUES (?, ?)";
-            PreparedStatement pst = conexion.prepareStatement(sql);
-            pst.setInt(1, idUsuario);
-            pst.setString(2, email);
+            String fechaRegistro = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            
+            String sqlUsuario = "INSERT INTO Usuario (nombre, apellido, telefono, tipoUsuario, contrasena) " +
+                                "VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement pstUsuario = conexion.prepareStatement(sqlUsuario, PreparedStatement.RETURN_GENERATED_KEYS);
+            pstUsuario.setString(1, getNombre());
+            pstUsuario.setString(2, getApellido());
+            pstUsuario.setString(3, getTelefono());
+            pstUsuario.setString(4, "cliente");
+            pstUsuario.setString(5, getTelefono());
 
-            int filasAfectadas = pst.executeUpdate();
-            pst.close();
-            return filasAfectadas > 0; // Retorna true si se insertó correctamente
+            int filasUsuario = pstUsuario.executeUpdate();
+            if (filasUsuario > 0) {
+                ResultSet rs = pstUsuario.getGeneratedKeys();
+                if (rs.next()) {
+                    int idUsuarioGenerado = rs.getInt(1);
+                    setIdUsuario(idUsuarioGenerado);
+
+                    String sqlCliente = "INSERT INTO Cliente (Usuario_idUsuario, email, fechaRegistro) VALUES (?, ?, ?)";
+                    PreparedStatement pstCliente = conexion.prepareStatement(sqlCliente);
+                    pstCliente.setInt(1, idUsuarioGenerado);
+                    pstCliente.setString(2, email);
+                    pstCliente.setString(3, fechaRegistro);
+
+                    int filasCliente = pstCliente.executeUpdate();
+                    exito = filasCliente > 0;
+                    pstCliente.close();
+                }
+                rs.close();
+            }
+            pstUsuario.close();
         } catch (SQLException e) {
             System.err.println("Error al registrar el cliente: " + e.getMessage());
-            return false;
         }
+        return exito;
+    }
+    
+    @Override
+    public String toString() {
+        return super.toString()+
+            ", email='" + email;
     }
 
-    // Método para actualizar datos del cliente
-    public boolean actualizarCliente(int idCliente, String nuevoEmail) {
+    public static List<Cliente> obtenerClientes() {
+        List<Cliente> clientes = new ArrayList<>();
+        Connection conexion = Conexion.conectar();
+
         try {
-            String sql = "UPDATE Cliente SET email = ? WHERE idCliente = ?";
+            String sql = """
+                            SELECT c.idCliente, u.idUsuario, u.nombre, u.apellido, u.telefono, 
+                                   c.email, c.fechaRegistro 
+                            FROM Cliente c 
+                            JOIN Usuario u ON c.Usuario_idUsuario = u.idUsuario
+                        """;
             PreparedStatement pst = conexion.prepareStatement(sql);
-            pst.setString(1, nuevoEmail);
-            pst.setInt(2, idCliente);
-
-            int filasAfectadas = pst.executeUpdate();
-            pst.close();
-            return filasAfectadas > 0; // Retorna true si se actualizó correctamente
-        } catch (SQLException e) {
-            System.err.println("Error al actualizar el cliente: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // Método para eliminar un cliente
-    public boolean eliminarCliente(int idCliente) {
-        try {
-            String sql = "DELETE FROM Cliente WHERE idCliente = ?";
-            PreparedStatement pst = conexion.prepareStatement(sql);
-            pst.setInt(1, idCliente);
-
-            int filasAfectadas = pst.executeUpdate();
-            pst.close();
-            return filasAfectadas > 0; // Retorna true si se eliminó correctamente
-        } catch (SQLException e) {
-            System.err.println("Error al eliminar el cliente: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // Método para cambiar la contraseña del cliente (después de iniciar sesión)
-    public boolean cambiarContrasena(int idUsuario, String nuevaContrasena) {
-        try {
-            String sql = "UPDATE Usuario SET contrasena = ? WHERE idUsuario = ?";
-            PreparedStatement pst = conexion.prepareStatement(sql);
-            pst.setString(1, nuevaContrasena);
-            pst.setInt(2, idUsuario);
-
-            int filasAfectadas = pst.executeUpdate();
-            pst.close();
-            return filasAfectadas > 0; // Retorna true si se actualizó la contraseña
-        } catch (SQLException e) {
-            System.err.println("Error al cambiar la contraseña: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // Método para obtener los datos del cliente
-    public Cliente obtenerCliente(int idCliente) {
-        Cliente cliente = null;
-        try {
-            String sql = "SELECT * FROM Cliente WHERE idCliente = ?";
-            PreparedStatement pst = conexion.prepareStatement(sql);
-            pst.setInt(1, idCliente);
-
             ResultSet rs = pst.executeQuery();
-            if (rs.next()) {
-                cliente = new Cliente();
-                cliente.idCliente = rs.getInt("idCliente");
-                cliente.Usuario_idUsuario = rs.getInt("Usuario_idUsuario");
-                cliente.email = rs.getString("email");
-                cliente.fechaRegistro = rs.getString("fechaRegistro");
-            }
 
+            while (rs.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(rs.getInt("idUsuario"));
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setApellido(rs.getString("apellido"));
+                cliente.setTelefono(rs.getString("telefono"));
+                cliente.setEmail(rs.getString("email"));
+                cliente.setFechaRegistro(rs.getString("fechaRegistro"));
+                clientes.add(cliente);
+            }
             rs.close();
             pst.close();
         } catch (SQLException e) {
-            System.err.println("Error al obtener el cliente: " + e.getMessage());
+            System.err.println("Error al obtener clientes: " + e.getMessage());
         }
-        return cliente; // Retorna el cliente encontrado o null si no existe
+
+        return clientes;
     }
 
-    // Getters y Setters
-    public int getIdCliente() {
-        return idCliente;
+    public boolean actualizarEmail(String nuevoEmail) {
+        boolean actualizado = false;
+        Connection conexion = Conexion.conectar();
+        try {
+            String sql = "UPDATE Cliente SET email = ? WHERE Usuario_idUsuario = ?";
+            PreparedStatement pst = conexion.prepareStatement(sql);
+            pst.setString(1, nuevoEmail);
+            pst.setInt(2, this.getIdUsuario());
+
+            int filasAfectadas = pst.executeUpdate();
+            if (filasAfectadas > 0) {
+                this.email = nuevoEmail;
+                actualizado = true;
+            }
+            pst.close();
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar el email del cliente: " + e.getMessage());
+        }
+        return actualizado;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public boolean actualizarFechaRegistro(Date nuevaFechaRegistro) {
+        boolean actualizado = false;
+        Connection conexion = Conexion.conectar();
+        try {
+            SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaRegistroString = formatoFecha.format(nuevaFechaRegistro);
+
+            String sql = "UPDATE Cliente SET fechaRegistro = ? WHERE Usuario_idUsuario = ?";
+            PreparedStatement pst = conexion.prepareStatement(sql);
+            pst.setString(1, fechaRegistroString);
+            pst.setInt(2, this.getIdUsuario());
+
+            int filasAfectadas = pst.executeUpdate();
+            if (filasAfectadas > 0) {
+                this.fechaRegistro = fechaRegistroString;
+                actualizado = true;
+            }
+            pst.close();
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar la fecha de registro del cliente: " + e.getMessage());
+        }
+        return actualizado;
+    }
+    
+        public boolean actualizarCliente(String nuevoNombre, String nuevoApellido, String nuevoTelefono, String nuevoEmail, int idCliente) {
+            boolean actualizado = false;
+            Connection conexion = Conexion.conectar();
+
+            try {
+                conexion.setAutoCommit(false);
+
+                String sqlCliente = "UPDATE Cliente SET nombre = ?, apellido = ?, telefono = ? WHERE idCliente = ?";
+                PreparedStatement pstCliente = conexion.prepareStatement(sqlCliente);
+                pstCliente.setString(1, nuevoNombre);
+                pstCliente.setString(2, nuevoApellido);
+                pstCliente.setString(3, nuevoTelefono);
+                pstCliente.setInt(4, idCliente);
+
+                String sqlUsuario = "UPDATE Usuario SET email = ? WHERE idUsuario = (SELECT idUsuario FROM Cliente WHERE idCliente = ?)";
+                PreparedStatement pstUsuario = conexion.prepareStatement(sqlUsuario);
+                pstUsuario.setString(1, nuevoEmail);
+                pstUsuario.setInt(2, idCliente);
+
+                int filasAfectadasCliente = pstCliente.executeUpdate();
+                int filasAfectadasUsuario = pstUsuario.executeUpdate();
+
+                if (filasAfectadasCliente > 0 && filasAfectadasUsuario > 0) {
+                    conexion.commit();
+                    actualizado = true;
+                } else {
+                    conexion.rollback();
+                }
+
+                pstCliente.close();
+                pstUsuario.close();
+
+            } catch (SQLException e) {
+                System.err.println("Error al actualizar los datos del cliente y usuario: " + e.getMessage());
+                try {
+                    conexion.rollback();
+                } catch (SQLException ex) {
+                    System.err.println("Error al revertir los cambios: " + ex.getMessage());
+                }
+            } finally {
+                try {
+                    conexion.setAutoCommit(true);
+                } catch (SQLException e) {
+                    System.err.println("Error al restaurar el autocommit: " + e.getMessage());
+                }
+            }
+
+            return actualizado;
+        }
+
+    public boolean eliminarCliente(int idCliente) {
+        boolean eliminado = false;
+        Connection conexion = Conexion.conectar();
+        try {
+            String sqlCliente = "DELETE FROM Cliente WHERE Usuario_idUsuario = ?";
+            PreparedStatement pstCliente = conexion.prepareStatement(sqlCliente);
+            pstCliente.setInt(1, this.getIdUsuario());
+
+            int filasAfectadas = pstCliente.executeUpdate();
+            if (filasAfectadas > 0) {
+                String sqlUsuario = "DELETE FROM Usuario WHERE idUsuario = ?";
+                PreparedStatement pstUsuario = conexion.prepareStatement(sqlUsuario);
+                pstUsuario.setInt(1, this.getIdUsuario());
+                pstUsuario.executeUpdate();
+
+                eliminado = true;
+            }
+            pstCliente.close();
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar el cliente: " + e.getMessage());
+        }
+        return eliminado;
     }
 
-    public int getUsuario_idUsuario() {
-        return Usuario_idUsuario;
-    }
-
-    public void setUsuario_idUsuario(int Usuario_idUsuario) {
-        this.Usuario_idUsuario = Usuario_idUsuario;
-    }
 
     public String getEmail() {
         return email;
@@ -140,5 +239,13 @@ public class Cliente {
 
     public void setFechaRegistro(String fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
+    }
+
+    public Object getIdCliente() {
+        return idCliente;
+    }
+    
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 }

@@ -79,18 +79,18 @@ public class Administrador extends Usuario {
 
         try {
             String sql = """
-                            SELECT a.idAdministrador, u.idUsuario, u.nombre, u.apellido, u.telefono, a.email, a.salario
+                            SELECT a.idAdministrador, u.idUsuario, u.nombre, u.apellido, 
+                            u.telefono, a.email, a.salario
                             FROM Administrador a
                             JOIN Usuario u ON a.Usuario_idUsuario = u.idUsuario
                         """;
             PreparedStatement pst = conexion.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
 
-            // Recorrer los resultados y agregar a la lista
             while (rs.next()) {
                Administrador admin = new Administrador();
-               admin.setIdAdministrador(rs.getInt("idAdministrador")); // Establecer ID del administrador
-               admin.setIdUsuario(rs.getInt("idUsuario"));             // Establecer ID del usuario
+               admin.setIdAdministrador(rs.getInt("idAdministrador"));
+               admin.setIdUsuario(rs.getInt("idUsuario"));            
                admin.setNombre(rs.getString("nombre"));
                admin.setApellido(rs.getString("apellido"));
                admin.setTelefono(rs.getString("telefono"));
@@ -113,7 +113,7 @@ public class Administrador extends Usuario {
 
         try {
             String sql = "UPDATE Administrador SET email = ? WHERE Usuario_idUsuario = ?";
-            System.out.println("SQL: " + sql);  // Depuración
+            System.out.println("SQL: " + sql);
             PreparedStatement pst = conexion.prepareStatement(sql);
             pst.setString(1, nuevoEmail);
             pst.setInt(2, this.getIdUsuario());
@@ -177,25 +177,23 @@ public class Administrador extends Usuario {
             int filasAfectadasAdministrador = pstAdministrador.executeUpdate();
 
             if (filasAfectadasUsuario > 0 && filasAfectadasAdministrador > 0) {
-                conexion.commit();  // Confirma los cambios en ambas tablas
+                conexion.commit();
                 actualizado = true;
             } else {
-                conexion.rollback();  // Revierte los cambios si no se actualizó alguna fila
+                conexion.rollback();
             }
-
-            // Cierra los statements
             pstUsuario.close();
             pstAdministrador.close();
         } catch (SQLException e) {
             System.err.println("Error al actualizar los datos del administrador y usuario: " + e.getMessage());
             try {
-                conexion.rollback();  // En caso de error, se revierte la transacción
+                conexion.rollback();
             } catch (SQLException ex) {
                 System.err.println("Error al revertir los cambios: " + ex.getMessage());
             }
         } finally {
             try {
-                conexion.setAutoCommit(true);  // Vuelve a activar el modo de autocommit
+                conexion.setAutoCommit(true);
             } catch (SQLException e) {
                 System.err.println("Error al restaurar el autocommit: " + e.getMessage());
             }
@@ -215,7 +213,6 @@ public class Administrador extends Usuario {
 
             int filasAfectadas = pstAdministrador.executeUpdate();
             if (filasAfectadas > 0) {
-                // Luego eliminamos al usuario de la tabla 'Usuario'
                 String sqlUsuario = "DELETE FROM Usuario WHERE idUsuario = ?";
                 PreparedStatement pstUsuario = conexion.prepareStatement(sqlUsuario);
                 pstUsuario.setInt(1, idUsuario);

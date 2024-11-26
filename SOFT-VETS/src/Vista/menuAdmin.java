@@ -20,7 +20,7 @@ public class menuAdmin extends javax.swing.JFrame {
                 + "border:40,4,4,4;"        
                 + "arc:10");
         
-        editarPerfilAdmin editarPerfilPanel = new editarPerfilAdmin(usuarioAutenticado);   
+        editarPerfilAdmin editarPerfilPanel = new editarPerfilAdmin(usuarioAutenticado,this);   
         cambio.add(editarPerfilPanel, "EDITAR PERFIL");
         editarPerfilPanel.usuarioInfo();
         
@@ -30,8 +30,11 @@ public class menuAdmin extends javax.swing.JFrame {
         selectButton(inicio);
         inicioActionPerformed(null);
         
-}
-     
+    }
+    public void actualizarNombreApellido(String nombre, String apellido) {
+        nombreApellido.setText(nombre + " " + apellido);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -45,8 +48,8 @@ public class menuAdmin extends javax.swing.JFrame {
         cerrarsesion = new javax.swing.JButton();
         citas = new javax.swing.JButton();
         Salir = new javax.swing.JButton();
-        SOFT = new javax.swing.JLabel();
         VETS = new javax.swing.JLabel();
+        SOFT = new javax.swing.JLabel();
         clientes = new javax.swing.JButton();
         personal = new javax.swing.JButton();
         cambio = new javax.swing.JPanel();
@@ -178,20 +181,20 @@ public class menuAdmin extends javax.swing.JFrame {
         menu.add(Salir);
         Salir.setBounds(30, 630, 200, 50);
 
-        SOFT.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
-        SOFT.setForeground(new java.awt.Color(73, 166, 166));
-        SOFT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        SOFT.setText("SOFT");
-        SOFT.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        menu.add(SOFT);
-        SOFT.setBounds(40, 20, 90, 45);
-
         VETS.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
         VETS.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         VETS.setText("VETS");
         VETS.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         menu.add(VETS);
         VETS.setBounds(130, 20, 80, 45);
+
+        SOFT.setFont(new java.awt.Font("Century Gothic", 1, 36)); // NOI18N
+        SOFT.setForeground(new java.awt.Color(73, 166, 166));
+        SOFT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        SOFT.setText("SOFT");
+        SOFT.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        menu.add(SOFT);
+        SOFT.setBounds(50, 20, 90, 45);
 
         clientes.setBackground(new java.awt.Color(209, 209, 209));
         clientes.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
@@ -319,6 +322,8 @@ public class menuAdmin extends javax.swing.JFrame {
 
     private void mascotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mascotasActionPerformed
         selectButton(mascotas);
+        mostrarPanel("GESTION MASCOTAS");
+        
     }//GEN-LAST:event_mascotasActionPerformed
 
     private void cerrarsesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarsesionActionPerformed

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Usuario {
     private int idUsuario;
@@ -52,65 +54,98 @@ public class Usuario {
 
     public Usuario iniciarSesion(String usuarioInput, String contrasenaInput) {
         Usuario usuarioAutenticado = null;
-        Connection conexion = Conexion.conectar();  // Obtener la conexión compartida
+        Connection conexion = Conexion.conectar();  // Conexión compartida
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
         try {
             if (!verificarConexion()) {
                 return null;  // No se pudo establecer la conexión
             }
 
             String sql = "SELECT * FROM Usuario WHERE usuario = ? AND contrasena = ?";
-            PreparedStatement pst = conexion.prepareStatement(sql);
+            pst = conexion.prepareStatement(sql);
             pst.setString(1, usuarioInput);
             pst.setString(2, contrasenaInput);
-
-            ResultSet rs = pst.executeQuery();
+            rs = pst.executeQuery();
 
             if (rs.next()) {
-                if ("administrador".equals(rs.getString("tipoUsuario"))) {
-                    String sqlAdmin = "SELECT * FROM Administrador WHERE Usuario_idUsuario = ?";
-                    PreparedStatement pstAdmin = conexion.prepareStatement(sqlAdmin);
-                    pstAdmin.setInt(1, rs.getInt("idUsuario"));
-                    ResultSet rsAdmin = pstAdmin.executeQuery();
+                String tipoUsuario = rs.getString("tipoUsuario");
 
-                    if (rsAdmin.next()) {
-                        usuarioAutenticado = new Administrador(
-                            rs.getInt("idUsuario"),
-                            rs.getString("nombre"),
-                            rs.getString("apellido"),
-                            rs.getString("telefono"),
-                            rs.getString("tipoUsuario"),
-                            rs.getString("usuario"),
-                            rs.getString("contrasena"),
-                            rsAdmin.getString("email"),
-                            rsAdmin.getDouble("salario")
-                        );
-                    }
-                    rsAdmin.close();
-                    pstAdmin.close();
-                } else {
-                    usuarioAutenticado = new Usuario(
+                switch (tipoUsuario) {
+                    case "administrador":
+                        usuarioAutenticado = obtenerAdministrador(rs.getInt("idUsuario"), rs, conexion);
+                        break;
+                    case "cliente":
+                        usuarioAutenticado = obtenerCliente(rs.getInt("idUsuario"), rs, conexion);
+                        break;
+                    default:
+                        System.out.println("Tipo de usuario no reconocido: " + tipoUsuario);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al iniciar sesión: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (pst != null) pst.close();
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+        return usuarioAutenticado;
+    }
+
+    private Usuario obtenerAdministrador(int idUsuario, ResultSet rs, Connection conexion) throws SQLException {
+        String sqlAdmin = "SELECT * FROM Administrador WHERE Usuario_idUsuario = ?";
+        try (PreparedStatement pstAdmin = conexion.prepareStatement(sqlAdmin)) {
+            pstAdmin.setInt(1, idUsuario);
+            try (ResultSet rsAdmin = pstAdmin.executeQuery()) {
+                if (rsAdmin.next()) {
+                    return new Administrador(
                         rs.getInt("idUsuario"),
                         rs.getString("nombre"),
                         rs.getString("apellido"),
                         rs.getString("telefono"),
                         rs.getString("tipoUsuario"),
                         rs.getString("usuario"),
-                        rs.getString("contrasena")
+                        rs.getString("contrasena"),
+                        rsAdmin.getString("email"),
+                        rsAdmin.getDouble("salario")
                     );
                 }
             }
-
-            rs.close();
-            pst.close();
-        } catch (SQLException e) {
-            System.err.println("Error al iniciar sesión: " + e.getMessage());
-            e.printStackTrace();
         }
-
-        return usuarioAutenticado;
+        return null;
     }
 
-    // Actualizar la información del usuario
+    private Usuario obtenerCliente(int idUsuario, ResultSet rs, Connection conexion) throws SQLException {
+        String sqlCliente = "SELECT * FROM Cliente WHERE Usuario_idUsuario = ?";
+        try (PreparedStatement pstCliente = conexion.prepareStatement(sqlCliente)) {
+            pstCliente.setInt(1, idUsuario);
+            try (ResultSet rsCliente = pstCliente.executeQuery()) {
+                if (rsCliente.next()) {
+                    LocalDate fechaRegistro = rsCliente.getDate("fechaRegistro").toLocalDate();
+                    String fechaRegistroTexto = fechaRegistro.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+                    return new Cliente(
+                        rs.getInt("idUsuario"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido"),
+                        rs.getString("telefono"),
+                        rs.getString("tipoUsuario"),
+                        rs.getString("usuario"),
+                        rs.getString("contrasena"),
+                        rsCliente.getString("email"),
+                        fechaRegistroTexto
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean actualizarInformacion(String nombre, String apellido, String telefono, String contrasena) {
         boolean actualizado = false;
         Connection conexion = Conexion.conectar();  // Obtener la conexión compartida
