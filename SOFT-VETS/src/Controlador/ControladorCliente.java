@@ -8,6 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.JFrame;
 
 public class ControladorCliente {
     private gestionClienteAdmin gestionCliente;
@@ -106,10 +107,11 @@ public class ControladorCliente {
         }
     }
 
-    public void actualizarCliente(String nuevoNombre, String nuevoEmail,  String nuevoApellido, String nuevoTelefono, int idCliente) {
-        boolean exito = cliente.actualizarCliente(nuevoNombre, nuevoApellido, nuevoEmail, nuevoTelefono, idCliente);
+    public void actualizarCliente(String nuevoNombre,  String nuevoApellido , String nuevoTelefono, String nuevoEmail, int idCliente, JFrame administrarCliente) {
+        boolean exito = cliente.actualizarCliente(nuevoNombre, nuevoApellido, nuevoTelefono, nuevoEmail, idCliente);
         if (exito) {
             JOptionPane.showMessageDialog(null, "Cliente actualizado exitosamente");
+            administrarCliente.dispose();
         } else {
             JOptionPane.showMessageDialog(null, "Hubo un error al actualizar al cliente");
         }

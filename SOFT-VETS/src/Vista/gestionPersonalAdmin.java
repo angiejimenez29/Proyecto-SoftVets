@@ -745,59 +745,59 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     }//GEN-LAST:event_EditarAdminActionPerformed
 
     private void tablaAdminMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaAdminMouseClicked
-    int row = tablaAdmin.getSelectedRow();
-    if (row >= 0) {
-        Integer idAdministrador = (Integer) tablaAdmin.getValueAt(row, 0); 
-        System.out.println("ID Administrador: " + idAdministrador);
+        int row = tablaAdmin.getSelectedRow();
+        if (row >= 0) {
+            Integer idAdministrador = (Integer) tablaAdmin.getValueAt(row, 0); 
+            System.out.println("ID Administrador: " + idAdministrador);
 
-        // Resto de datos
-        Integer idUsuario = (Integer) tablaAdmin.getValueAt(row, 1);  
-        System.out.println("ID Usuario: " + idUsuario);
-        
-        String nombreCompleto = (String) tablaAdmin.getValueAt(row, 2); 
-        String[] partesNombre = nombreCompleto.split(" ");
+            // Resto de datos
+            Integer idUsuario = (Integer) tablaAdmin.getValueAt(row, 1);  
+            System.out.println("ID Usuario: " + idUsuario);
 
-        String nombre = partesNombre[0];
-        String apellido = partesNombre.length > 1 ? partesNombre[1] : "";
+            String nombreCompleto = (String) tablaAdmin.getValueAt(row, 2); 
+            String[] partesNombre = nombreCompleto.split(" ");
 
-        String telefono = (String) tablaAdmin.getValueAt(row, 3); 
-        String email = (String) tablaAdmin.getValueAt(row, 4);  
-        Double salario = (Double) tablaAdmin.getValueAt(row, 5);  
+            String nombre = partesNombre[0];
+            String apellido = partesNombre.length > 1 ? partesNombre[1] : "";
 
-        txtNombre1.setText(nombre);
-        txtApellido1.setText(apellido);
-        txtTelefono1.setText(telefono);
-        txtEmail1.setText(email);
-        txtSalario1.setText(String.valueOf(salario));
+            String telefono = (String) tablaAdmin.getValueAt(row, 3); 
+            String email = (String) tablaAdmin.getValueAt(row, 4);  
+            Double salario = (Double) tablaAdmin.getValueAt(row, 5);  
 
-        txtNombre1.setEnabled(false);
-        txtApellido1.setEnabled(false);
-        txtTelefono1.setEnabled(false);
-        txtEmail1.setEnabled(false);
-        txtSalario1.setEnabled(false);
-        
-        cancelarEdicion.setEnabled(false);
-        guardarEdicion.setEnabled(false);
-        
-        txtnombre.setText(nombre);
-        txtApellido.setText(apellido);
-        txtTelefono.setText(telefono);
-        txtEmail.setText(email);
-        txtSalario.setText(String.valueOf(salario));
-        
-        txtnombre.setEnabled(false);
-        txtApellido.setEnabled(false);
-        txtTelefono.setEnabled(false);
-        txtEmail.setEnabled(false);
-        txtSalario.setEnabled(false);
-        
-        txtContraseña.setVisible(false);
-        jLabelContraseña.setVisible(false);
-        
-        this.idUsuarioSeleccionado = idUsuario;
-        
-        iniciarEdicion(idUsuario);
-        }
+            txtNombre1.setText(nombre);
+            txtApellido1.setText(apellido);
+            txtTelefono1.setText(telefono);
+            txtEmail1.setText(email);
+            txtSalario1.setText(String.valueOf(salario));
+
+            txtNombre1.setEnabled(false);
+            txtApellido1.setEnabled(false);
+            txtTelefono1.setEnabled(false);
+            txtEmail1.setEnabled(false);
+            txtSalario1.setEnabled(false);
+
+            cancelarEdicion.setEnabled(false);
+            guardarEdicion.setEnabled(false);
+
+            txtnombre.setText(nombre);
+            txtApellido.setText(apellido);
+            txtTelefono.setText(telefono);
+            txtEmail.setText(email);
+            txtSalario.setText(String.valueOf(salario));
+
+            txtnombre.setEnabled(false);
+            txtApellido.setEnabled(false);
+            txtTelefono.setEnabled(false);
+            txtEmail.setEnabled(false);
+            txtSalario.setEnabled(false);
+
+            txtContraseña.setVisible(false);
+            jLabelContraseña.setVisible(false);
+
+            this.idUsuarioSeleccionado = idUsuario;
+
+            iniciarEdicion(idUsuario);
+            }
     }//GEN-LAST:event_tablaAdminMouseClicked
 
     private void txtBuscarAdminKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarAdminKeyReleased

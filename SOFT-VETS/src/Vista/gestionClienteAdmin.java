@@ -7,6 +7,7 @@ import Modelo.Cliente;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.CardLayout;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -14,16 +15,25 @@ import javax.swing.table.DefaultTableModel;
 
 public class gestionClienteAdmin extends javax.swing.JPanel {
     private ControladorCliente controlador;
+    private administrarCliente adminCliente;
     private Cliente cliente;
     private Integer idUsuarioSeleccionado;
     private String nombreOriginal, apellidoOriginal, telefonoOriginal, emailOriginal;
+    private Integer idClienteSeleccionado;
+    private String nombreSeleccionado;
+    private String apellidoSeleccionado;
+    private String telefonoSeleccionado;
+    private String emailSeleccionado;
     
     public gestionClienteAdmin() {
         initComponents();
         init();
         controlador = new ControladorCliente(new Cliente());
-        controlador.mostrarClientes(tablaClientes);      
+        controlador.mostrarClientes(tablaClientes);   
+        adminCliente = new administrarCliente(idClienteSeleccionado);
+                
     }
+    
 
     private void init(){
         clienteTabla.putClientProperty(FlatClientProperties.STYLE , ""
@@ -125,12 +135,17 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tablaClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaClientesMouseClicked(evt);
+            }
+        });
         scroll.setViewportView(tablaClientes);
 
         clienteTabla.add(scroll);
         scroll.setBounds(0, 130, 780, 520);
         clienteTabla.add(jSeparator1);
-        jSeparator1.setBounds(0, 120, 770, 30);
+        jSeparator1.setBounds(0, 120, 780, 30);
 
         txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -163,6 +178,11 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
 
         Editar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Editar.setText("Editar");
+        Editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditarActionPerformed(evt);
+            }
+        });
         clienteTabla.add(Editar);
         Editar.setBounds(490, 80, 110, 30);
 
@@ -234,9 +254,9 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
     
     
     private void NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NuevoActionPerformed
-        administrarCliente registrarCliente = new administrarCliente();
-            registrarCliente.setVisible(true);
-            registrarCliente.addWindowListener(new java.awt.event.WindowAdapter() {
+        adminCliente.mostrarPanel("registrarCliente");
+        adminCliente.setVisible(true);
+            adminCliente.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosed(java.awt.event.WindowEvent windowEvent) {
                     controlador.mostrarClientes(tablaClientes);
@@ -251,6 +271,50 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
     private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBuscarActionPerformed
+
+    private void EditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarActionPerformed
+    if (idClienteSeleccionado != null) {
+        abrirVentanaAdministrarCliente(
+            idClienteSeleccionado,
+            nombreSeleccionado,
+            apellidoSeleccionado,
+            telefonoSeleccionado,
+            emailSeleccionado
+        );
+    } else {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente de la tabla para editar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
+    }//GEN-LAST:event_EditarActionPerformed
+
+    
+    private void abrirVentanaAdministrarCliente(Integer idCliente, String nombre, String apellido, String telefono, String email) {
+        administrarCliente adminCliente = new administrarCliente(idCliente);
+        adminCliente.setControlador(this.controlador);
+        adminCliente.mostrarPanel("editarCliente");
+        adminCliente.recibirDatos(idCliente, nombre, apellido, telefono, email);
+        adminCliente.setVisible(true);
+        adminCliente.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                controlador.mostrarClientes(tablaClientes);
+            }
+        });
+    }
+    
+    private void tablaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClientesMouseClicked
+        int row = tablaClientes.getSelectedRow();
+        if (row >= 0) {
+            idClienteSeleccionado = (Integer) tablaClientes.getValueAt(row, 0);
+            String nombreCompleto = (String) tablaClientes.getValueAt(row, 2);
+            String[] partesNombre = nombreCompleto.split(" ");
+            nombreSeleccionado = partesNombre[0];
+            apellidoSeleccionado = partesNombre.length > 1 ? partesNombre[1] : "";
+            telefonoSeleccionado = (String) tablaClientes.getValueAt(row, 3);
+            emailSeleccionado = (String) tablaClientes.getValueAt(row, 4);
+            
+            this.idUsuarioSeleccionado = idClienteSeleccionado;
+    }//GEN-LAST:event_tablaClientesMouseClicked
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
