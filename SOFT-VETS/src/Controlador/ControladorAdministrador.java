@@ -72,7 +72,7 @@ public class ControladorAdministrador {
     }
     
     public void buscarAdmin(String nombreBuscar, JTable tablaAdmin) {
-    List<Administrador> administradoresFiltrados = Administrador.obtenerAdministradores().stream()
+        List<Administrador> administradoresFiltrados = Administrador.obtenerAdministradores().stream()
         .filter(admin -> {
             String nombreCompleto = admin.getNombre() + " " + admin.getApellido();
             return nombreCompleto.toLowerCase().contains(nombreBuscar.toLowerCase());

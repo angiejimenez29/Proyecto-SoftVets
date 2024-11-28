@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public class Cliente extends Usuario{
-    private int idCliente;
+    private int idCliente;;
     private String email;
     private String fechaRegistro;
 
@@ -88,7 +88,8 @@ public class Cliente extends Usuario{
 
             while (rs.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setIdCliente(rs.getInt("idUsuario"));
+                cliente.setIdCliente(rs.getInt("idCliente"));
+                cliente.setIdUsuario(rs.getInt("idUsuario"));
                 cliente.setNombre(rs.getString("nombre"));
                 cliente.setApellido(rs.getString("apellido"));
                 cliente.setTelefono(rs.getString("telefono"));
@@ -183,20 +184,19 @@ public boolean actualizarCliente(String nuevoNombre, String nuevoApellido, Strin
     return actualizado;
 }
 
-
-    public boolean eliminarCliente(int idCliente) {
+    public boolean eliminarCliente(int idUsuario) {
         boolean eliminado = false;
         Connection conexion = Conexion.conectar();
         try {
             String sqlCliente = "DELETE FROM Cliente WHERE Usuario_idUsuario = ?";
             PreparedStatement pstCliente = conexion.prepareStatement(sqlCliente);
-            pstCliente.setInt(1, this.getIdUsuario());
+            pstCliente.setInt(1, idUsuario);
 
             int filasAfectadas = pstCliente.executeUpdate();
             if (filasAfectadas > 0) {
                 String sqlUsuario = "DELETE FROM Usuario WHERE idUsuario = ?";
                 PreparedStatement pstUsuario = conexion.prepareStatement(sqlUsuario);
-                pstUsuario.setInt(1, this.getIdUsuario());
+                pstUsuario.setInt(1, idUsuario);
                 pstUsuario.executeUpdate();
 
                 eliminado = true;

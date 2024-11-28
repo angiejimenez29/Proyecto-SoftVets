@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import Controlador.ControladorCliente;
 import Modelo.Administrador;
 import Modelo.Cliente;
+import Vista.administrarCliente;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.CardLayout;
 import java.util.List;
@@ -19,7 +20,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
     private Cliente cliente;
     private Integer idUsuarioSeleccionado;
     private String nombreOriginal, apellidoOriginal, telefonoOriginal, emailOriginal;
-    private Integer idClienteSeleccionado;
+    private Integer idUsuario;
     private String nombreSeleccionado;
     private String apellidoSeleccionado;
     private String telefonoSeleccionado;
@@ -30,7 +31,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
         init();
         controlador = new ControladorCliente(new Cliente());
         controlador.mostrarClientes(tablaClientes);   
-        adminCliente = new administrarCliente(idClienteSeleccionado);
+        adminCliente = new administrarCliente(idUsuario);
                 
     }
     
@@ -58,14 +59,14 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
                 + "trackInsets:3,3,3,3;"
                 + "thumbInsets:3,3,3,3;"
                 + "background:$Table.background;");
-        txtBuscar.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Buscar...");
-        txtBuscar.putClientProperty(FlatClientProperties.STYLE, ""
+        txtBuscarCliente.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Buscar...");
+        txtBuscarCliente.putClientProperty(FlatClientProperties.STYLE, ""
                 + "arc:15;"
                 + "borderWidth:0;"
                 + "focusWidth:0;"
                 + "innerFocusWidth:0;"
                 + "background:$Panel.background");
-        txtBuscar.setFont(new java.awt.Font("Roboto", java.awt.Font.PLAIN, 14));
+        txtBuscarCliente.setFont(new java.awt.Font("Roboto", java.awt.Font.PLAIN, 14));
         
     }
     @SuppressWarnings("unchecked")
@@ -78,7 +79,7 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
         scroll = new javax.swing.JScrollPane();
         tablaClientes = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
-        txtBuscar = new javax.swing.JTextField();
+        txtBuscarCliente = new javax.swing.JTextField();
         Eliminar = new javax.swing.JButton();
         Nuevo = new javax.swing.JButton();
         Editar = new javax.swing.JButton();
@@ -147,14 +148,19 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
         clienteTabla.add(jSeparator1);
         jSeparator1.setBounds(0, 120, 780, 30);
 
-        txtBuscar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtBuscar.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscarCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarActionPerformed(evt);
+                txtBuscarClienteActionPerformed(evt);
             }
         });
-        clienteTabla.add(txtBuscar);
-        txtBuscar.setBounds(60, 80, 220, 30);
+        txtBuscarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarClienteKeyReleased(evt);
+            }
+        });
+        clienteTabla.add(txtBuscarCliente);
+        txtBuscarCliente.setBounds(60, 80, 220, 30);
 
         Eliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Eliminar.setText("Eliminar");
@@ -265,17 +271,24 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
     }//GEN-LAST:event_NuevoActionPerformed
 
     private void EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarActionPerformed
-        // TODO add your handling code here:
+        int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar este administrador?", 
+                                                 "Confirmación de eliminación", JOptionPane.YES_NO_OPTION);
+        if (confirmation == JOptionPane.YES_OPTION) {
+            controlador.eliminarCliente(idUsuarioSeleccionado);
+
+            System.out.print("usuario" + idUsuarioSeleccionado);
+            controlador.mostrarClientes(tablaClientes);
+        }  
     }//GEN-LAST:event_EliminarActionPerformed
 
-    private void txtBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarActionPerformed
+    private void txtBuscarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarClienteActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtBuscarActionPerformed
+    }//GEN-LAST:event_txtBuscarClienteActionPerformed
 
     private void EditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarActionPerformed
-    if (idClienteSeleccionado != null) {
+    if (idUsuario != null) {
         abrirVentanaAdministrarCliente(
-            idClienteSeleccionado,
+            idUsuario,
             nombreSeleccionado,
             apellidoSeleccionado,
             telefonoSeleccionado,
@@ -304,7 +317,12 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
     private void tablaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaClientesMouseClicked
         int row = tablaClientes.getSelectedRow();
         if (row >= 0) {
-            idClienteSeleccionado = (Integer) tablaClientes.getValueAt(row, 0);
+
+            Integer idCliente = (Integer) tablaClientes.getValueAt(row, 0);  
+            System.out.println("ID Cliente: " + idCliente);
+            
+            idUsuario = (Integer) tablaClientes.getValueAt(row, 1); 
+            System.out.println("ID Usuario: " + idUsuario);
             String nombreCompleto = (String) tablaClientes.getValueAt(row, 2);
             String[] partesNombre = nombreCompleto.split(" ");
             nombreSeleccionado = partesNombre[0];
@@ -312,9 +330,14 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
             telefonoSeleccionado = (String) tablaClientes.getValueAt(row, 3);
             emailSeleccionado = (String) tablaClientes.getValueAt(row, 4);
             
-            this.idUsuarioSeleccionado = idClienteSeleccionado;
+            this.idUsuarioSeleccionado = idUsuario;
+        }
     }//GEN-LAST:event_tablaClientesMouseClicked
-    }
+
+    private void txtBuscarClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarClienteKeyReleased
+        String nombreApellidoBuscar = txtBuscarCliente.getText().trim();      
+        controlador.buscarCliente(nombreApellidoBuscar, tablaClientes);
+    }//GEN-LAST:event_txtBuscarClienteKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -329,6 +352,6 @@ public class gestionClienteAdmin extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JScrollPane scroll;
     private javax.swing.JTable tablaClientes;
-    private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtBuscarCliente;
     // End of variables declaration//GEN-END:variables
 }

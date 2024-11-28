@@ -69,7 +69,10 @@ public class ControladorCliente {
     
     public void buscarCliente(String nombreBuscar, JTable tablaClientes) {
         List<Cliente> clientesFiltrados = Cliente.obtenerClientes().stream()
-            .filter(cli -> cli.getNombre().toLowerCase().contains(nombreBuscar.toLowerCase()))
+            .filter(cli -> {
+            String nombreApellidoCompleto = cli.getNombre() + " " + cli.getApellido();
+            return nombreApellidoCompleto.toLowerCase().contains(nombreBuscar.toLowerCase());
+            })
             .collect(Collectors.toList());
 
         DefaultTableModel modelo = new DefaultTableModel(
@@ -87,19 +90,38 @@ public class ControladorCliente {
             Object[] fila = new Object[] {
                 cli.getIdCliente(),
                 cli.getIdUsuario(),
-                cli.getNombre(),
-                telefono,
+                cli.getNombre() + " " + cli.getApellido(),
+                cli.getTelefono(),
                 cli.getEmail(),
                 cli.getFechaRegistro()
             };
             modelo.addRow(fila);
         }
+    tablaClientes.setModel(modelo);
+     
+    tablaClientes.getColumnModel().getColumn(0).setPreferredWidth(0); 
+    tablaClientes.getColumnModel().getColumn(1).setPreferredWidth(0);  
+    tablaClientes.getColumnModel().getColumn(2).setPreferredWidth(150);
+    tablaClientes.getColumnModel().getColumn(3).setPreferredWidth(100);
+    tablaClientes.getColumnModel().getColumn(4).setPreferredWidth(150); 
+    tablaClientes.getColumnModel().getColumn(5).setPreferredWidth(100);
 
-        tablaClientes.setModel(modelo);
+    tablaClientes.getColumnModel().getColumn(0).setMaxWidth(0);  // IDA
+    tablaClientes.getColumnModel().getColumn(0).setMinWidth(0);  // IDA
+    tablaClientes.getColumnModel().getColumn(1).setMaxWidth(0);  // IDU
+    tablaClientes.getColumnModel().getColumn(1).setMinWidth(0);  // IDU
+    tablaClientes.getColumnModel().getColumn(0).setResizable(false); 
+    tablaClientes.getColumnModel().getColumn(1).setResizable(false); 
+
+    DefaultTableCellRenderer centroRenderer = new DefaultTableCellRenderer();
+    centroRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+    for (int i = 0; i < tablaClientes.getColumnCount(); i++) {
+        tablaClientes.getColumnModel().getColumn(i).setCellRenderer(centroRenderer);
+    }
     }
 
-    public void eliminarCliente(int idCliente) {
-        boolean exito = cliente.eliminarCliente(idCliente);
+    public void eliminarCliente(int idUsuario) {
+        boolean exito = cliente.eliminarCliente(idUsuario);
         if (exito) {
             JOptionPane.showMessageDialog(null, "Cliente eliminado correctamente.");
         } else {
