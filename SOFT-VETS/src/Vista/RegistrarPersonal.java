@@ -2,13 +2,21 @@ package Vista;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import raven.datetime.component.date.DatePicker;
+import Modelo.Personal;
+import java.util.List;
+import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.ParseException;
 
 
 public class RegistrarPersonal extends javax.swing.JFrame {
 
     public RegistrarPersonal() {
         initComponents();
+        configurarTablaHorario();
         setLocationRelativeTo(null);
+        configureHorarioLogic();
         //horarios del personal
         fecha.setCloseAfterSelected(true);
         fecha.setEditor(inicioContrato); 
@@ -30,6 +38,56 @@ public class RegistrarPersonal extends javax.swing.JFrame {
                 + "cellFocusColor:$TableHeader.hoverBackground;"
                 + "selectionBackground:$TableHeader.hoverBackground;"
                 + "selectionForeground:$Table.foreground;");
+    }
+    
+    // Método para configurar el modelo de la tabla
+    private void configurarTablaHorario() {
+        tablaHorario.setModel(new javax.swing.table.DefaultTableModel(
+            new Object[][] {
+                {"Lunes", false, false},
+                {"Martes", false, false},
+                {"Miércoles", false, false},
+                {"Jueves", false, false},
+                {"Viernes", false, false},
+                {"Sábado", false, false},
+                {"Domingo", false, false}
+            },
+            new String[] {
+                "Día", "Mañana", "Tarde"
+            }
+        ) {
+            Class[] types = new Class[] {
+                String.class, Boolean.class, Boolean.class
+            };
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                return types[columnIndex];
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Solo permite editar las columnas de "Mañana" y "Tarde"
+                return column == 1 || column == 2;
+            }
+        });
+    }
+    
+    private void configureHorarioLogic() {
+        tablaHorario.getModel().addTableModelListener(e -> {
+            int row = e.getFirstRow(); // Obtiene la fila afectada
+            int column = e.getColumn(); // Obtiene la columna afectada
+
+            if (column == 1 || column == 2) { // Columnas "Mañana" o "Tarde"
+                Boolean isSelected = (Boolean) tablaHorario.getModel().getValueAt(row, column);
+
+                if (isSelected != null && isSelected) {
+                    // Deseleccionar la otra columna dentro de la misma fila
+                    int otraColumna = (column == 1) ? 2 : 1;
+                    tablaHorario.getModel().setValueAt(false, row, otraColumna);
+                }
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -53,8 +111,8 @@ public class RegistrarPersonal extends javax.swing.JFrame {
         inicioContrato = new javax.swing.JFormattedTextField();
         jLabel7 = new javax.swing.JLabel();
         finContrato = new javax.swing.JFormattedTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        guardarRegistro = new javax.swing.JButton();
+        cancelarRegistro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -150,14 +208,19 @@ public class RegistrarPersonal extends javax.swing.JFrame {
         jLabel7.setText("Hasta");
         jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jButton1.setText("Guardar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        guardarRegistro.setText("Guardar");
+        guardarRegistro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                guardarRegistroActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Cancelar");
+        cancelarRegistro.setText("Cancelar");
+        cancelarRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarRegistroActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -165,37 +228,38 @@ public class RegistrarPersonal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel1)
-                                .addComponent(jLabel2))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(33, 33, 33)
-                                    .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addGap(32, 32, 32)
-                                    .addComponent(especialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(32, 32, 32)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(telefono, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(finContrato, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(inicioContrato, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(salario, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(panelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addComponent(nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(32, 32, 32)
+                                .addComponent(especialidad, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(32, 32, 32)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(telefono, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(finContrato, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(inicioContrato, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(salario, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(cancelarRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(guardarRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(panelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,16 +292,11 @@ public class RegistrarPersonal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addComponent(panelTabla, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(30, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(guardarRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cancelarRegistro, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -262,19 +321,98 @@ public class RegistrarPersonal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_telefonoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void guardarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarRegistroActionPerformed
+       String nombrePersonal = nombre.getText().trim();
+        String especialidadSeleccionada = especialidad.getSelectedItem().toString();
+        String telefonoPersonal = telefono.getText().trim();
+        String salarioTexto = salario.getText().replace(",", "").trim();
+        double salario = 0;
 
+        if (!salarioTexto.isEmpty()) {
+            try {
+                salario = Double.parseDouble(salarioTexto);
+            } catch (NumberFormatException e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El salario debe ser un número válido.");
+                return;
+            }
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "El salario no puede estar vacío.");
+            return;
+        }
 
+        String fechaInicioStr = inicioContrato.getText().trim().replace("/", "-");
+        String fechaFinStr = finContrato.getText().trim().replace("/", "-");
+
+        java.sql.Date sqlFechaInicio = null;
+        java.sql.Date sqlFechaFin = null;
+
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy");
+            inputFormat.setLenient(false);
+
+            if (fechaInicioStr.isEmpty() || fechaFinStr.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Ambas fechas deben estar llenas.");
+                return;
+            }
+
+            Date fechaInicio = inputFormat.parse(fechaInicioStr);
+            Date fechaFin = inputFormat.parse(fechaFinStr);
+
+            if (fechaInicio.after(fechaFin)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La fecha de inicio no puede ser posterior a la fecha de fin.");
+                return;
+            }
+
+            sqlFechaInicio = new java.sql.Date(fechaInicio.getTime());
+            sqlFechaFin = new java.sql.Date(fechaFin.getTime());
+
+        } catch (ParseException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Las fechas deben tener el formato correcto (dd-MM-yyyy).");
+            return;
+        }
+
+        List<String[]> horariosSeleccionados = new ArrayList<>();
+            for (int i = 0; i < tablaHorario.getRowCount(); i++) {
+                String diaSemana = (String) tablaHorario.getValueAt(i, 0);
+                Boolean manana = (Boolean) tablaHorario.getValueAt(i, 1);
+                Boolean tarde = (Boolean) tablaHorario.getValueAt(i, 2);
+
+                if (manana != null && manana) {
+                    horariosSeleccionados.add(new String[]{diaSemana, "Mañana"});
+                }
+                if (tarde != null && tarde) {
+                    horariosSeleccionados.add(new String[]{diaSemana, "Tarde"});
+                }
+            }
+
+            if (horariosSeleccionados.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Debes seleccionar al menos un turno para un día.");
+                return;
+            }
+     
+        Personal personal = new Personal(nombrePersonal, especialidadSeleccionada, telefonoPersonal, sqlFechaInicio, sqlFechaFin, salario);
+
+        // Guardar el personal en la base de datos
+        boolean exito = personal.registrarPersonal(horariosSeleccionados);
+        if (exito) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El personal ha sido registrado exitosamente.");
+            this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Hubo un error al registrar el personal.");
+        }
+    }//GEN-LAST:event_guardarRegistroActionPerformed
+
+    private void cancelarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarRegistroActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_cancelarRegistroActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cancelarRegistro;
     private javax.swing.JComboBox<String> especialidad;
     private raven.datetime.component.date.DatePicker fecha;
     private javax.swing.JFormattedTextField finContrato;
+    private javax.swing.JButton guardarRegistro;
     private javax.swing.JFormattedTextField inicioContrato;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
