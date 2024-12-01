@@ -293,6 +293,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="finContrato">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="finContratoActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>

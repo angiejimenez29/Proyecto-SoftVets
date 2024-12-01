@@ -40,7 +40,7 @@ public class Usuario {
 
     private boolean verificarConexion() {
         try {
-            Connection conexion = Conexion.conectar();  // Obtener conexión desde la clase Conexion
+            Connection conexion = Conexion.conectar();
             if (conexion == null || conexion.isClosed()) {
                 System.out.println("No se pudo restablecer la conexión a la base de datos.");
                 return false;

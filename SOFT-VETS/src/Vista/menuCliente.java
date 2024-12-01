@@ -453,14 +453,6 @@ public class menuCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_labelTelefonoActionPerformed
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new menuCliente().setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel SOFT;
     private javax.swing.JButton Salir;

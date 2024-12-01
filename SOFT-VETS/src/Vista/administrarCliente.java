@@ -322,7 +322,6 @@ public class administrarCliente extends javax.swing.JFrame {
             Cliente cliente = new Cliente(0, nombre, apellido, telefono, "cliente", null, telefono, email, null);
             if (cliente.registrarCliente()) {
                 JOptionPane.showMessageDialog(this, "Cliente registrado exitosamente.");
-                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Error al registrar al cliente.");
             }

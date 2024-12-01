@@ -110,8 +110,6 @@ public class ControladorCliente {
     tablaClientes.getColumnModel().getColumn(0).setMinWidth(0);  // IDA
     tablaClientes.getColumnModel().getColumn(1).setMaxWidth(0);  // IDU
     tablaClientes.getColumnModel().getColumn(1).setMinWidth(0);  // IDU
-    tablaClientes.getColumnModel().getColumn(0).setResizable(false); 
-    tablaClientes.getColumnModel().getColumn(1).setResizable(false); 
 
     DefaultTableCellRenderer centroRenderer = new DefaultTableCellRenderer();
     centroRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);

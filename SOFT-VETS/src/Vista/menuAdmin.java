@@ -27,6 +27,7 @@ public class menuAdmin extends javax.swing.JFrame {
         cambio.add(new gestionPersonalAdmin(), "GESTION PERSONAL");
         cambio.add(menuPrincipal, "Menu Principal");
         cambio.add(new gestionClienteAdmin(), "GESTION CLIENTE");
+        cambio.add(new gestionMascotaAdmin(), "GESTION MASCOTAS");
         selectButton(inicio);
         inicioActionPerformed(null);
         
@@ -262,7 +263,7 @@ public class menuAdmin extends javax.swing.JFrame {
             .addGroup(menuPrincipalLayout.createSequentialGroup()
                 .addGap(118, 118, 118)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(484, Short.MAX_VALUE))
+                .addContainerGap(487, Short.MAX_VALUE))
         );
 
         cambio.add(menuPrincipal, "card3");

@@ -1,62 +1,62 @@
 package Modelo;
 
-import java.util.Scanner;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class HistorialMedico {
-    private Scanner scanner;
-    private Mascota mascota;
-    private Cliente cliente;
+public class HistorialMedico{
 
-    public HistorialMedico(Mascota mascota, Cliente cliente) {
-        this.mascota = mascota;
-        this.cliente = cliente;
-        this.scanner = scanner;
-    }
-
-    public void mostrarHistorial() {
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("\n--Historial de " + mascota.getNombreMascota() + "--");
-    System.out.println("Nombre de la mascota: " + mascota.getNombreMascota());
-    System.out.println("Especie: " + mascota.getEspecie());
-    System.out.println("Raza: " + mascota.getRaza());
-    System.out.println("Edad: " + mascota.getEdad());
-    System.out.println("Sexo: " + mascota.getSexo());
-    System.out.println("Castrado: " + (mascota.isCastrada() ? "Si" : "No"));
-    if (!mascota.isCastrada() && mascota.getSexo().equals("Hembra")) {
-        System.out.println("Gestante: " + (mascota.isGestante() ? "Si" : "No"));
-    }
-    System.out.println("Color: " + mascota.getColor());
-    System.out.println("Peso: " + mascota.getPeso() + " kg");
-    System.out.println("Fecha de nacimiento: " + mascota.getFechaNacimiento());
-    System.out.println("Fecha de registro: " + mascota.getFechaRegistro());
-
-    System.out.println("\nVacunas:");
-    if (mascota.getVacunas().isEmpty()) {
-        System.out.println("No hay vacunas registradas.");
-    } else {
-        for (String vacuna : mascota.getVacunas()) {
-            System.out.println("- " + vacuna);
+    public List<String> obtenerVacunasPorEspecie(String especie) throws SQLException {
+        List<String> vacunas = new ArrayList<>();
+        String query = "SELECT v.nombre FROM Vacuna v " +
+                       "JOIN EspecieVacuna ev ON v.idVacuna = ev.idVacuna " +
+                       "JOIN Especie e ON e.idEspecie = ev.idEspecie " +
+                       "WHERE e.nombre = ?";
+        
+        try (Connection con = Conexion.conectar(); 
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, especie);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                vacunas.add(rs.getString("nombre"));
+            }
         }
+        return vacunas;
     }
 
-    System.out.println("\nAlergias:");
-    if (mascota.getAlergias().isEmpty()) {
-        System.out.println("No hay alergias registradas.");
-    } else {
-        for (String alergia : mascota.getAlergias()) {
-            System.out.println("- " + alergia);
+    public List<String> obtenerAlergiasPorEspecie(String especie) throws SQLException {
+        List<String> alergias = new ArrayList<>();
+        String query = "SELECT a.nombre FROM Alergia a " +
+                       "JOIN EspecieAlergia ea ON a.idAlergia = ea.idAlergia " +
+                       "JOIN Especie e ON e.idEspecie = ea.idEspecie " +
+                       "WHERE e.nombre = ?";
+        
+        try (Connection con = Conexion.conectar(); 
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, especie);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                alergias.add(rs.getString("nombre"));
+            }
         }
+        return alergias;
     }
 
-    System.out.println("\nEnfermedades:");
-    if (mascota.getEnfermedades().isEmpty()) {
-        System.out.println("No hay enfermedades registradas.");
-    } else {
-        for (String enfermedad : mascota.getEnfermedades()) {
-            System.out.println("- " + enfermedad);
+    public List<String> obtenerEnfermedadesPorEspecie(String especie) throws SQLException {
+        List<String> enfermedades = new ArrayList<>();
+        String query = "SELECT e.nombre FROM Enfermedad e " +
+                       "JOIN EspecieEnfermedad ee ON e.idEnfermedad = ee.idEnfermedad " +
+                       "JOIN Especie es ON es.idEspecie = ee.idEspecie " +
+                       "WHERE es.nombre = ?";
+        
+        try (Connection con = Conexion.conectar(); 
+             PreparedStatement ps = con.prepareStatement(query)) {
+            ps.setString(1, especie);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                enfermedades.add(rs.getString("nombre"));
+            }
         }
-    }
+        return enfermedades;
     }
 }
-    
