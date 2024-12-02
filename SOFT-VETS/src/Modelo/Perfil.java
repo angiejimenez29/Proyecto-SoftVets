@@ -8,7 +8,7 @@ public class Perfil extends JButton{
     public Perfil(){
         setContentAreaFilled(false);
         setFocusPainted(false);
-        ImageIcon icon = new ImageIcon(getClass().getResource("/imagenlogo/iconito.png"));  // Reemplaza con la ruta de tu imagen
+        ImageIcon icon = new ImageIcon(getClass().getResource("/imagenlogo/iconito.png"));
         int width = icon.getIconWidth();
         int height = icon.getIconHeight();
         setPreferredSize(new Dimension(width, height));
@@ -17,10 +17,10 @@ public class Perfil extends JButton{
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // Antialiasing para bordes suaves
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
        
         if (getModel().isPressed()) {
-            g2.setColor(getBackground().darker()); // Cambiar el color cuando el botón es presionado
+            g2.setColor(getBackground().darker());
         } else {
             g2.setColor(getBackground());
         }

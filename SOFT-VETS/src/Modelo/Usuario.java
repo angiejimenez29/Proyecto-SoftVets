@@ -45,7 +45,7 @@ public class Usuario {
                 System.out.println("No se pudo restablecer la conexión a la base de datos.");
                 return false;
             }
-            return true;  // La conexión está activa
+            return true;
         } catch (SQLException e) {
             System.out.println("Error al verificar la conexión: " + e.getMessage());
             return false;
@@ -54,13 +54,13 @@ public class Usuario {
 
     public Usuario iniciarSesion(String usuarioInput, String contrasenaInput) {
         Usuario usuarioAutenticado = null;
-        Connection conexion = Conexion.conectar();  // Conexión compartida
+        Connection conexion = Conexion.conectar();
         PreparedStatement pst = null;
         ResultSet rs = null;
 
         try {
             if (!verificarConexion()) {
-                return null;  // No se pudo establecer la conexión
+                return null; 
             }
 
             String sql = "SELECT * FROM Usuario WHERE usuario = ? AND contrasena = ?";
@@ -148,10 +148,10 @@ public class Usuario {
 
     public boolean actualizarInformacion(String nombre, String apellido, String telefono, String contrasena) {
         boolean actualizado = false;
-        Connection conexion = Conexion.conectar();  // Obtener la conexión compartida
+        Connection conexion = Conexion.conectar(); 
         try {
             if (!verificarConexion()) {
-                return false;  // No se pudo establecer la conexión
+                return false; 
             }
 
             String sql = "UPDATE Usuario SET nombre = ?, apellido = ?, telefono = ?, contrasena = ? WHERE idUsuario = ?";
@@ -180,7 +180,6 @@ public class Usuario {
         return actualizado;
     }
 
-    // Métodos getter y setter
     public int getIdUsuario() {
         return idUsuario;
     }

@@ -75,7 +75,6 @@ public class Cliente extends Usuario{
     public static List<Cliente> obtenerClientes() {
         List<Cliente> clientes = new ArrayList<>();
         Connection conexion = Conexion.conectar();
-
         try {
             String sql = """
                             SELECT c.idCliente, u.idUsuario, u.nombre, u.apellido, u.telefono, 

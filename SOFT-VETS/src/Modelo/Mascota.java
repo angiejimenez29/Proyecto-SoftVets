@@ -27,9 +27,6 @@ public class Mascota {
     private String apellidoCliente; 
     private HistorialMedico historialMedico;
 
-
-
-    // Constructor completo
     public Mascota(int idMascota, String nombreMascota, int especie, String raza, int edad, String sexo,
                    String color, double peso, Date fechaNacimiento,
                    boolean castrada, int idCliente) {
@@ -158,7 +155,7 @@ public class Mascota {
 
 
     public static boolean actualizarMascota(Mascota mascota) {
-        Connection conexion = Conexion.conectar(); // Conexión fuera del bloque try
+        Connection conexion = Conexion.conectar();
 
         try {
             String query = "UPDATE Mascota SET nombreMascota = ?, especie = ?, raza = ?, edad = ?, sexo = ?, color = ?, peso = ?, fechaNacimiento = ?, castrada = ?, idCliente = ? WHERE idMascota = ?";
@@ -240,7 +237,7 @@ public class Mascota {
                 Mascota mascota = new Mascota(
                     rs.getInt("idMascota"),
                     rs.getString("nombreMascota"),
-                    rs.getInt("idEspecie"), // idEspecie para mantener consistencia
+                    rs.getInt("idEspecie"),
                     rs.getString("raza"),
                     rs.getInt("edad"),
                     rs.getString("sexo"),

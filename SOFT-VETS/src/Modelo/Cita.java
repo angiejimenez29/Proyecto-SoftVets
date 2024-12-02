@@ -32,19 +32,18 @@ public class Cita {
         this.idCliente = idCliente;
     }
 
-    // Método para agendar una nueva cita
     public static void agendarCita() {
         System.out.print("Ingrese su ID (Cliente): ");
         int idCliente = scanner.nextInt();
-        scanner.nextLine();  // Limpiar el buffer
+        scanner.nextLine(); 
 
         System.out.print("Ingrese el ID de la mascota: ");
         int idMascota = scanner.nextInt();
-        scanner.nextLine();  // Limpiar el buffer
+        scanner.nextLine(); 
 
         System.out.print("Ingrese el ID del especialista (Personal): ");
         int idPersonal = scanner.nextInt();
-        scanner.nextLine();  // Limpiar el buffer
+        scanner.nextLine(); 
 
         System.out.print("Ingrese la fecha de la cita (yyyy-MM-dd): ");
         String fechaStr = scanner.nextLine();
@@ -59,14 +58,11 @@ public class Cita {
         System.out.print("Ingrese el estado de la cita (pendiente, realizada, cancelada): ");
         String estado = scanner.nextLine();
 
-        // Crear una nueva instancia de Cita
         Cita cita = new Cita(0, fechaCita, idMascota, idPersonal, tipoCita, observaciones, estado, idCliente);
 
-        // Guardar la cita en la base de datos
         cita.guardarCita();
     }
 
-    // Método para guardar la cita en la base de datos
     public void guardarCita() {
         Connection conexion = Conexion.conectar();
         PreparedStatement pst = null;
@@ -75,7 +71,7 @@ public class Cita {
             String sql = "INSERT INTO Cita (fecha, idMascota, idPersonal, tipoCita, observaciones, estado, idCliente) " +
                          "VALUES (?, ?, ?, ?, ?, ?, ?)";
             pst = conexion.prepareStatement(sql);
-            pst.setDate(1, java.sql.Date.valueOf(this.fecha));  // Convertir LocalDate a java.sql.Date
+            pst.setDate(1, java.sql.Date.valueOf(this.fecha)); 
             pst.setInt(2, this.idMascota);
             pst.setInt(3, this.idPersonal);
             pst.setString(4, this.tipoCita);
@@ -94,13 +90,11 @@ public class Cita {
         }
     }
 
-    // Método para modificar una cita existente
     public static void modificarCita() {
         System.out.print("Ingrese el ID de la cita a modificar: ");
         int idCita = scanner.nextInt();
-        scanner.nextLine();  // Limpiar el buffer
+        scanner.nextLine(); 
 
-        // Obtener la cita existente de la base de datos
         Cita cita = obtenerCitaPorId(idCita);
         if (cita == null) {
             System.out.println("No se encontró una cita con ese ID.");
@@ -131,11 +125,9 @@ public class Cita {
         String nuevoEstado = scanner.nextLine();
         cita.setEstado(nuevoEstado);
 
-        // Guardar los cambios en la base de datos
         cita.actualizarCita();
     }
 
-    // Método para obtener una cita por ID desde la base de datos
     public static Cita obtenerCitaPorId(int idCita) {
         Connection conexion = Conexion.conectar();
         PreparedStatement pst = null;
@@ -171,7 +163,6 @@ public class Cita {
         return null;
     }
 
-    // Método para actualizar la cita en la base de datos
     public void actualizarCita() {
         Connection conexion = Conexion.conectar();
         PreparedStatement pst = null;
@@ -201,14 +192,12 @@ public class Cita {
             }
         }
     }
-
-    // Método para cancelar una cita
+    
     public static void cancelarCita() {
         System.out.print("Ingrese el ID de la cita a cancelar: ");
         int idCita = scanner.nextInt();
-        scanner.nextLine();  // Limpiar el buffer
+        scanner.nextLine(); 
 
-        // Obtener la cita existente de la base de datos
         Cita cita = obtenerCitaPorId(idCita);
         if (cita == null) {
             System.out.println("No se encontró una cita con ese ID.");
@@ -218,7 +207,6 @@ public class Cita {
         System.out.println("Cita encontrada: " + cita);
         cita.setEstado("cancelada");
 
-        // Guardar los cambios en la base de datos
         cita.actualizarCita();
     }
 
@@ -227,8 +215,49 @@ public class Cita {
         return "Cita{idCita=" + idCita + ", fecha=" + fecha + ", tipoCita='" + tipoCita + "', estado='" + estado + "'}";
     }
 
-    // Métodos getter y setter
-    // ... (Los mismos métodos getter y setter que antes)
+    public int getIdCita() {
+        return idCita;
+    }
+
+    public void setIdCita(int idCita) {
+        this.idCita = idCita;
+    }
+
+    public int getIdMascota() {
+        return idMascota;
+    }
+
+    public void setIdMascota(int idMascota) {
+        this.idMascota = idMascota;
+    }
+
+    public int getIdPersonal() {
+        return idPersonal;
+    }
+
+    public void setIdPersonal(int idPersonal) {
+        this.idPersonal = idPersonal;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public static Scanner getScanner() {
+        return scanner;
+    }
+
+    public static void setScanner(Scanner scanner) {
+        Cita.scanner = scanner;
+    }
+
+    private void setTipoCita(String nuevoTipoCita) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
     private void setFecha(LocalDate parse) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
@@ -239,10 +268,6 @@ public class Cita {
     }
 
     private void setEstado(String nuevoEstado) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void setTipoCita(String nuevoTipoCita) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -149,7 +149,7 @@ public class Personal {
 
         } catch (SQLException e) {
             System.err.println("Error al obtener la lista de personal: " + e.getMessage());
-            e.printStackTrace(); // Esto imprimirá la traza completa del error
+            e.printStackTrace();
         }
 
         return listaPersonal;
@@ -159,40 +159,34 @@ public class Personal {
         boolean eliminado = false;
         Connection conexion = Conexion.conectar();
         try {
-            // Iniciar transacción
             conexion.setAutoCommit(false); 
 
-            // Eliminar horarios asociados al personal
             String sqlEliminarHorarios = "DELETE FROM HorarioPersonal WHERE Personal_idPersonal = ?";
             PreparedStatement pstEliminarHorarios = conexion.prepareStatement(sqlEliminarHorarios);
             pstEliminarHorarios.setInt(1, idPersonal);
             int filasAfectadasHorarios = pstEliminarHorarios.executeUpdate();
 
-            // Eliminar el personal de la tabla Personal
             String sqlPersonal = "DELETE FROM Personal WHERE idPersonal = ?";
             PreparedStatement pstPersonal = conexion.prepareStatement(sqlPersonal);
             pstPersonal.setInt(1, idPersonal);
             int filasAfectadasPersonal = pstPersonal.executeUpdate();
 
-            // Si se eliminaron tanto los horarios como el personal, confirmamos la operación
             if (filasAfectadasHorarios > 0 && filasAfectadasPersonal > 0) {
                 eliminado = true;
             }
 
-            // Confirmar la transacción si todo salió bien
             if (eliminado) {
                 conexion.commit();
             } else {
-                conexion.rollback(); // Revertir si hubo un fallo
+                conexion.rollback();
             }
 
-            // Cerrar recursos
             pstEliminarHorarios.close();
             pstPersonal.close();
         } catch (SQLException e) {
             try {
                 if (conexion != null) {
-                    conexion.rollback(); // Revertir la transacción en caso de error
+                    conexion.rollback();
                 }
             } catch (SQLException rollbackEx) {
                 System.err.println("Error al revertir la transacción: " + rollbackEx.getMessage());

@@ -318,9 +318,6 @@ public class administrarMascota extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_RegistrarMascotaActionPerformed
 
-    
-    
-    
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
         this.dispose();
     }//GEN-LAST:event_CancelarActionPerformed

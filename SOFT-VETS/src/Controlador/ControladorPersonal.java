@@ -23,21 +23,18 @@ public class ControladorPersonal {
     }
     
     public void mostrarPersonal(JTable tablaPersonal) {
-        // Obtener la lista de personal desde la base de datos
         List<Personal> personalList = Personal.obtenerPersonal();
 
-        // Crear el modelo de tabla con las columnas deseadas
         DefaultTableModel modelo = new DefaultTableModel(
-            new Object[][] {}, // Inicialmente sin filas
+            new Object[][] {},
             new String[] {"IDP", "NOMBRE", "ESPECIALIDAD", "TELEFONO", "CONTRATO", "SALARIO"}
         ) {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return false; // No permitir la edición de celdas
+                return false;
             }
         };
 
-        // Agregar los registros a la tabla
         for (Personal p : personalList) {
             Object[] fila = new Object[] {
                 p.getIdPersonal(),
@@ -49,11 +46,9 @@ public class ControladorPersonal {
             };
             modelo.addRow(fila);
         }
-
         tablaPersonal.setModel(modelo);
         tablaPersonal.revalidate();
         tablaPersonal.repaint();
-
 
         tablaPersonal.getColumnModel().getColumn(0).setPreferredWidth(50);
         tablaPersonal.getColumnModel().getColumn(1).setPreferredWidth(150);
@@ -98,7 +93,6 @@ public class ControladorPersonal {
 
         tablaPersonal.setModel(modelo);
 
-        // Ocultar las columnas "IDP" y "Nombre"
         tablaPersonal.getColumnModel().getColumn(0).setMaxWidth(0);
         tablaPersonal.getColumnModel().getColumn(0).setMinWidth(0);
         tablaPersonal.getColumnModel().getColumn(1).setMaxWidth(0);
@@ -135,35 +129,31 @@ public class ControladorPersonal {
         ResultSet rs = null;
 
         try {
-            // Iniciar transacción
+
             conexion.setAutoCommit(false);
 
-            // Convertir java.util.Date a java.sql.Date
             java.sql.Date sqlFechaContratacion = new java.sql.Date(nuevaFechaContratacion.getTime());
             java.sql.Date sqlFechaFinContrato = new java.sql.Date(nuevaFechaFinContrato.getTime());
 
-            // 1. Actualizar datos en la tabla Personal
             String sqlPersonal = "UPDATE Personal SET nombrePersonal = ?, telefono = ?, especialidad = ?, salario = ?, fechaContratacion = ?, fechaFinContrato = ? WHERE idPersonal = ?";
             pstPersonal = conexion.prepareStatement(sqlPersonal);
             pstPersonal.setString(1, nuevoNombre);
             pstPersonal.setString(2, nuevoTelefono);
             pstPersonal.setString(3, nuevaEspecialidad);
             pstPersonal.setDouble(4, nuevoSalario);
-            pstPersonal.setDate(5, sqlFechaContratacion);  // Utilizar sqlDate
-            pstPersonal.setDate(6, sqlFechaFinContrato);   // Utilizar sqlDate
+            pstPersonal.setDate(5, sqlFechaContratacion);
+            pstPersonal.setDate(6, sqlFechaFinContrato); 
             pstPersonal.setInt(7, idPersonal);
 
             int filasAfectadasPersonal = pstPersonal.executeUpdate();
 
-            // Si se actualizó el personal, actualizamos los horarios asociados
             if (filasAfectadasPersonal > 0) {
-                // Eliminar horarios anteriores
+
                 String sqlEliminarHorarios = "DELETE FROM HorarioPersonal WHERE Personal_idPersonal = ?";
                 PreparedStatement pstEliminarHorarios = conexion.prepareStatement(sqlEliminarHorarios);
                 pstEliminarHorarios.setInt(1, idPersonal);
                 pstEliminarHorarios.executeUpdate();
 
-                // Insertar nuevos horarios
                 String sqlHorario = "INSERT INTO HorarioPersonal (Personal_idPersonal, diaSemana, turno, horaInicio, horaSalida) VALUES (?, ?, ?, ?, ?)";
                 pstHorario = conexion.prepareStatement(sqlHorario);
 
@@ -172,8 +162,7 @@ public class ControladorPersonal {
                     String turno = horario[1];
                     String horaInicio;
                     String horaSalida;
-
-                    // Asignar horas según el turno
+                    
                     if ("Mañana".equalsIgnoreCase(turno)) {
                         horaInicio = "07:00:00";
                         horaSalida = "13:00:00";
@@ -189,28 +178,23 @@ public class ControladorPersonal {
                     pstHorario.setString(3, turno);
                     pstHorario.setString(4, horaInicio);
                     pstHorario.setString(5, horaSalida);
-                    pstHorario.addBatch(); // Añadir al batch
+                    pstHorario.addBatch();
                 }
-
-                // Ejecutar el batch de horarios
                 pstHorario.executeBatch();
                 actualizado = true;
             }
-
-            // Confirmar la transacción
             conexion.commit();
 
         } catch (SQLException e) {
             try {
                 if (conexion != null) {
-                    conexion.rollback(); // Revertir la transacción en caso de error
+                    conexion.rollback(); 
                 }
             } catch (SQLException rollbackEx) {
                 System.err.println("Error al revertir la transacción: " + rollbackEx.getMessage());
             }
             System.err.println("Error al actualizar el personal: " + e.getMessage());
         } finally {
-            // Cerrar recursos en orden inverso
             try {
                 if (rs != null) rs.close();
                 if (pstHorario != null) pstHorario.close();
@@ -233,7 +217,6 @@ public class ControladorPersonal {
         Personal personal = null;
 
         try {
-            // Obtener los datos del Personal
             String sqlPersonal = "SELECT * FROM Personal WHERE idPersonal = ?";
             pstPersonal = conexion.prepareStatement(sqlPersonal);
             pstPersonal.setInt(1, idPersonal);
@@ -251,13 +234,11 @@ public class ControladorPersonal {
                     rsPersonal.getBoolean("disponible")
                 );
 
-                // Ahora obtenemos los horarios asociados
                 String sqlHorario = "SELECT * FROM HorarioPersonal WHERE Personal_idPersonal = ?";
                 pstHorario = conexion.prepareStatement(sqlHorario);
                 pstHorario.setInt(1, idPersonal);
                 rsHorario = pstHorario.executeQuery();
 
-                // Llenar los horarios en el personal
                 List<String[]> horarios = new ArrayList<>();
                 while (rsHorario.next()) {
                     String diaSemana = rsHorario.getString("diaSemana");
@@ -265,12 +246,8 @@ public class ControladorPersonal {
                     String horaInicio = rsHorario.getString("horaInicio");
                     String horaSalida = rsHorario.getString("horaSalida");
 
-                    // Agregar los horarios al listado
                     horarios.add(new String[]{diaSemana, turno, horaInicio, horaSalida});
                 }
-
-                // Asignar los horarios al objeto personal
-                // Aquí puedes usar un método de la clase Personal para guardar los horarios si es necesario
 
             }
         } catch (SQLException e) {

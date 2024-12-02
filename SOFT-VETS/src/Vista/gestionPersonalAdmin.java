@@ -31,18 +31,13 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     public gestionPersonalAdmin() {
         initComponents();
         init();
-
-        // Se asume que 'controlador' es el controlador general para administradores y personal
         controlador = new ControladorAdministrador(new Administrador());
 
-        // Creación de ControladorPersonal (para tabla de personal)
-        controladorPersonal = new ControladorPersonal();  // Asignando la tabla personal al controlador
+        controladorPersonal = new ControladorPersonal();
 
-        // Mostrar los datos en las tablas
-        controlador.mostrarAdministradores(tablaAdmin);   // Método para mostrar datos de administradores
-        controladorPersonal.mostrarPersonal(tablaPersonal); // Método para mostrar datos de personal
+        controlador.mostrarAdministradores(tablaAdmin); 
+        controladorPersonal.mostrarPersonal(tablaPersonal); 
 
-        // Configurar las vistas de los paneles para "EDITAR" y "REGISTRAR"
         cambio.add(editarAdmin, "EDITAR");
         cambio.add(registrarAdmin, "REGISTRAR");   
     }
@@ -50,7 +45,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     private void init(){
         
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        renderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER); // Centrar los textos
+        renderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         tablaPersonal.setDefaultRenderer(Object.class, renderer);
         
         ImageIcon img1 = new ImageIcon(getClass().getResource("/imagenlogo/User Account_1.png"));
@@ -673,7 +668,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         apellidoOriginal = txtApellido1.getText();
         telefonoOriginal = txtTelefono1.getText();
         emailOriginal = txtEmail1.getText();
-        salarioOriginal = Double.parseDouble(txtSalario1.getText().replace(",", ""));  // Limpiar comas y convertir
+        salarioOriginal = Double.parseDouble(txtSalario1.getText().replace(",", ""));  
     }
     
     private void txtBuscarPersonalPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarPersonalPersonalActionPerformed
@@ -682,14 +677,13 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     }//GEN-LAST:event_txtBuscarPersonalPersonalActionPerformed
 
     private void eliminarPersonal(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarPersonal
-        // Verificar si hay una fila seleccionada
+
         int filaSeleccionada = tablaPersonal.getSelectedRow();
 
         if (filaSeleccionada != -1) {
-            // Obtener el ID del personal seleccionado (suponiendo que está en la primera columna de la tabla)
-            int idPersonal = (int) tablaPersonal.getValueAt(filaSeleccionada, 0); // Asumimos que el ID está en la primera columna
+            
+            int idPersonal = (int) tablaPersonal.getValueAt(filaSeleccionada, 0); 
 
-            // Confirmación antes de eliminar
             int confirmacion = JOptionPane.showConfirmDialog(null, 
                     "¿Estás seguro de que deseas eliminar al personal seleccionado?", 
                     "Confirmar Eliminación", 
@@ -697,14 +691,11 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
                     JOptionPane.WARNING_MESSAGE);
 
             if (confirmacion == JOptionPane.YES_OPTION) {
-                // Llamar al método de eliminar en el controlador
                 controladorPersonal.eliminarPersonal(idPersonal);
 
-                // Después de eliminar, actualizar la lista de personal en la tabla
                 controladorPersonal.mostrarPersonal(tablaPersonal);
             }
         } else {
-            // Si no se ha seleccionado ninguna fila
             JOptionPane.showMessageDialog(null, "Por favor, selecciona un personal para eliminar.");
         }
     }//GEN-LAST:event_eliminarPersonal
@@ -714,7 +705,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         registrarPersonal.addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosed(java.awt.event.WindowEvent e) {
-                System.out.println("Ventana RegistrarPersonal cerrada."); // Diagnóstico
+                System.out.println("Ventana RegistrarPersonal cerrada.");
                 controladorPersonal.mostrarPersonal(tablaPersonal);
             }
         });
