@@ -27,9 +27,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         controlador = new ControladorAdministrador(new Administrador());
         controlador.mostrarAdministradores(tablaAdmin);
         cambio.add(editarAdmin, "EDITAR");
-        cambio.add(registrarAdmin, "REGISTRAR");   
-        
-        
+        cambio.add(registrarAdmin, "REGISTRAR");       
     }
     
     private void init(){

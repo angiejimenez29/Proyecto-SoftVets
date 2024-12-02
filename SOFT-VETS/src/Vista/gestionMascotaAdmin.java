@@ -6,19 +6,17 @@ import Modelo.Conexion;
 import Modelo.HistorialMedico;
 import static Modelo.HistorialMedico.agregarAtributoAMascota;
 import Modelo.Mascota;
-import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.sql.*;
 import javax.swing.BoxLayout;
+
+import com.formdev.flatlaf.FlatClientProperties;
+import java.text.SimpleDateFormat;
 
 
 public class gestionMascotaAdmin extends javax.swing.JPanel {
@@ -160,6 +158,7 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         Guardar = new javax.swing.JButton();
+        ImprimirPDF = new javax.swing.JButton();
         Cancelar = new javax.swing.JButton();
 
         cambio.setLayout(new java.awt.CardLayout());
@@ -361,12 +360,9 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
                 .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(infoMascotaLayout.createSequentialGroup()
                         .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(infoMascotaLayout.createSequentialGroup()
-                                .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, Short.MAX_VALUE))
-                            .addGroup(infoMascotaLayout.createSequentialGroup()
-                                .addComponent(txtRaza, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtRaza, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(RadioCastrado, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -555,6 +551,14 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
             }
         });
 
+        ImprimirPDF.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        ImprimirPDF.setText("Imprimir");
+        ImprimirPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ImprimirPDFActionPerformed(evt);
+            }
+        });
+
         Cancelar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Cancelar.setText("Cancelar");
         Cancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -570,12 +574,14 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
             .addGroup(historialMedicoLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(editarperfil1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ImprimirPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGap(18, 18, 18)
                 .addComponent(Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 789, Short.MAX_VALUE)
         );
         historialMedicoLayout.setVerticalGroup(
             historialMedicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -583,8 +589,9 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(historialMedicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editarperfil1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ImprimirPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 612, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -619,7 +626,6 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
         panelEnfermedades.setLayout(new BoxLayout(panelEnfermedades, BoxLayout.Y_AXIS));
         panelVacunas.setLayout(new BoxLayout(panelVacunas, BoxLayout.Y_AXIS));
         try {
-
             HistorialMedico historialMedico = new HistorialMedico();
             List<String> alergias = historialMedico.obtenerAlergiasPorEspecie(especieSeleccionada);
             List<String> enfermedades = historialMedico.obtenerEnfermedadesPorEspecie(especieSeleccionada);
@@ -785,11 +791,16 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_GuardarActionPerformed
 
+    private void ImprimirPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ImprimirPDFActionPerformed
+        controlador.generarPDF(idMascotaSeleccionada);
+    }//GEN-LAST:event_ImprimirPDFActionPerformed
+
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
         CardLayout cardLayout = (CardLayout) cambio.getLayout();
         cardLayout.show(cambio, "MASCOTAS");
     }//GEN-LAST:event_CancelarActionPerformed
     
+
     private void eliminarAtributosDesmarcados(int idMascota, String tipoAtributo) {
     try {
         String query = "";
@@ -1008,6 +1019,7 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
     private javax.swing.JButton Eliminar;
     private javax.swing.JButton Guardar;
     private javax.swing.JButton HistorialMedico;
+    private javax.swing.JButton ImprimirPDF;
     private javax.swing.JButton Nuevo;
     private javax.swing.JRadioButton RadioCastrado;
     private javax.swing.JPanel cambio;

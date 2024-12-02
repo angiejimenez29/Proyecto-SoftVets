@@ -99,7 +99,7 @@ public class Mascota {
 
                 switch (especieDb) {
                     case 1:
-                        especieIndex = 1;  // Felino
+                        especieIndex = 1;  
                         break;
                     case 2:
                         especieIndex = 0;  // Canino

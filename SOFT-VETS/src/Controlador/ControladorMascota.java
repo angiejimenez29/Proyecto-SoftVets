@@ -1,11 +1,15 @@
 package Controlador;
 
+import Modelo.Cliente;
 import Modelo.Mascota;
+import Modelo.Mascota;
+import Modelo.generarHistorialMedico;
 import Vista.gestionMascotaAdmin;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -15,6 +19,7 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
@@ -25,6 +30,35 @@ public class ControladorMascota {
     public ControladorMascota(gestionMascotaAdmin gestionMascota) {
         this.gestionMascota = gestionMascota;
     }
+    
+    public void generarPDF(int idMascota) {
+    Mascota mascota = Mascota.obtenerMascotaPorId(idMascota); 
+    Cliente cliente = Cliente.obtenerClientePorId(mascota.getIdCliente());
+
+    if (mascota != null && cliente != null) {
+        generarHistorialMedico pdfGen = new generarHistorialMedico();
+        String ruta = "C:/Users/ASUS/OneDrive/Escritorio/HISTORIALMEDICO/HM_" + mascota.getNombreMascota() + ".pdf";
+        pdfGen.generarPDF(
+            ruta,
+            mascota.getNombreMascota(),
+            mascota.getEspecie() == 0 ? "Canino" : 
+            mascota.getEspecie() == 1 ? "Felino" : 
+            "Roedor", 
+            mascota.getRaza(),
+            mascota.getEdad(),
+            mascota.getSexo(),
+            mascota.getColor(),
+            mascota.getPeso(),
+            mascota.isCastrada(),
+            new SimpleDateFormat("dd/MM/yyyy").format(mascota.getFechaNacimiento()),
+            cliente.getNombre() + " " + cliente.getApellido()
+        );
+        JOptionPane.showMessageDialog(null, "Historial Medico generado exitosamente");
+    } else {
+        JOptionPane.showMessageDialog(null, "No se pudieron obtener los datos de la mascota o cliente.");
+    }
+}
+
 
     public void mostrarMascotas(JTable tablaMascotas) {
         List<Mascota> mascotas = Mascota.obtenerMascotas();
