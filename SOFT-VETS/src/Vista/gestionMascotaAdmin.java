@@ -2,22 +2,24 @@ package Vista;
 
 import Controlador.ControladorMascota;
 import Modelo.Cliente;
+import Modelo.Conexion;
+import Modelo.HistorialMedico;
+import static Modelo.HistorialMedico.agregarAtributoAMascota;
 import Modelo.Mascota;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.GridLayout;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
+import java.util.List;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.sql.*;
+import javax.swing.BoxLayout;
+
 
 public class gestionMascotaAdmin extends javax.swing.JPanel {
     private ControladorMascota controlador;
@@ -27,7 +29,6 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
     private String nombreMascotaOriginal, nombreOriginal, apellidoOriginal, especieOriginal, razaOriginal, sexoOriginal;
     private String nombreMascotaSeleccionado, nombreSeleccionado, apellidoSeleccionado, especieSeleccionado, razaSeleccionado, sexoSeleccionado;
 
-    
     public gestionMascotaAdmin() {
         initComponents();
         init();
@@ -38,6 +39,20 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
         cambio.add(historialMedico, "HISTORIALMEDICO");
         fecha.setCloseAfterSelected(true);
         fecha.setEditor(txtNacimiento); 
+        
+        Dimension panelSize = new Dimension(200, 160);
+        panelAlergias.setPreferredSize(panelSize);
+        panelEnfermedades.setPreferredSize(panelSize);
+        panelVacunas.setPreferredSize(panelSize);
+        
+        infoMascota.putClientProperty(FlatClientProperties.STYLE, 
+            "arc: 10; background: #FFFFFF;");
+        panelAlergias.putClientProperty(FlatClientProperties.STYLE, 
+            "arc: 10; background: #FFFFFF;");
+        panelEnfermedades.putClientProperty(FlatClientProperties.STYLE, 
+            "arc: 10; background: #FFFFFF;");
+        panelVacunas.putClientProperty(FlatClientProperties.STYLE, 
+            "arc: 10; background: #FFFFFF;");       
     }
     
     private void init(){
@@ -102,6 +117,16 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
 
         fecha = new raven.datetime.component.date.DatePicker();
         cambio = new javax.swing.JPanel();
+        mascotaTabla = new javax.swing.JPanel();
+        scroll = new javax.swing.JScrollPane();
+        tablaMascotas = new javax.swing.JTable();
+        jSeparator1 = new javax.swing.JSeparator();
+        txtBuscarMascota = new javax.swing.JTextField();
+        Eliminar = new javax.swing.JButton();
+        HistorialMedico = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        editarperfil = new javax.swing.JLabel();
+        Nuevo = new javax.swing.JButton();
         historialMedico = new javax.swing.JPanel();
         editarperfil1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -126,29 +151,145 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         txtNacimiento = new javax.swing.JFormattedTextField();
         RadioCastrado = new javax.swing.JRadioButton();
-        checkBox = new javax.swing.JPanel();
+        panelAlergias = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        panelEnfermedades = new javax.swing.JPanel();
+        panelVacunas = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         Guardar = new javax.swing.JButton();
         Cancelar = new javax.swing.JButton();
-        mascotaTabla = new javax.swing.JPanel();
-        scroll = new javax.swing.JScrollPane();
-        tablaMascotas = new javax.swing.JTable();
-        jSeparator1 = new javax.swing.JSeparator();
-        txtBuscarMascota = new javax.swing.JTextField();
-        Eliminar = new javax.swing.JButton();
-        HistorialMedico = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        editarperfil = new javax.swing.JLabel();
-        Nuevo = new javax.swing.JButton();
 
         cambio.setLayout(new java.awt.CardLayout());
+
+        mascotaTabla.setLayout(null);
+
+        scroll.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        tablaMascotas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "Nombre", "Especie", "Raza", "Edad", "Sexo", ""
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaMascotas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaMascotasMouseClicked(evt);
+            }
+        });
+        scroll.setViewportView(tablaMascotas);
+
+        mascotaTabla.add(scroll);
+        scroll.setBounds(0, 130, 790, 520);
+        mascotaTabla.add(jSeparator1);
+        jSeparator1.setBounds(0, 130, 790, 30);
+
+        txtBuscarMascota.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBuscarMascota.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBuscarMascotaActionPerformed(evt);
+            }
+        });
+        txtBuscarMascota.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarMascotaKeyReleased(evt);
+            }
+        });
+        mascotaTabla.add(txtBuscarMascota);
+        txtBuscarMascota.setBounds(70, 90, 220, 30);
+
+        Eliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        Eliminar.setText("Eliminar");
+        Eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EliminarActionPerformed(evt);
+            }
+        });
+        mascotaTabla.add(Eliminar);
+        Eliminar.setBounds(650, 90, 110, 30);
+
+        HistorialMedico.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        HistorialMedico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Medical History_1.png"))); // NOI18N
+        HistorialMedico.setText("Historial Medico");
+        HistorialMedico.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        HistorialMedico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HistorialMedicoActionPerformed(evt);
+            }
+        });
+        mascotaTabla.add(HistorialMedico);
+        HistorialMedico.setBounds(590, 20, 170, 50);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Google Web Search_1.png"))); // NOI18N
+        mascotaTabla.add(jLabel2);
+        jLabel2.setBounds(30, 90, 30, 30);
+
+        editarperfil.setFont(new java.awt.Font("Segoe UI Semibold", 1, 24)); // NOI18N
+        editarperfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Animal Shelter.png"))); // NOI18N
+        editarperfil.setText("   MASCOTAS");
+        mascotaTabla.add(editarperfil);
+        editarperfil.setBounds(20, 20, 270, 60);
+
+        Nuevo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        Nuevo.setText("Nuevo");
+        Nuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NuevoActionPerformed(evt);
+            }
+        });
+        mascotaTabla.add(Nuevo);
+        Nuevo.setBounds(520, 90, 110, 30);
+
+        cambio.add(mascotaTabla, "card2");
 
         editarperfil1.setFont(new java.awt.Font("Segoe UI Semibold", 1, 24)); // NOI18N
         editarperfil1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Medical History_3.png"))); // NOI18N
         editarperfil1.setText("  HISTORIAL MEDICO");
 
+        jScrollPane2.setBorder(null);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(850, 659));
+
         historial.setPreferredSize(new java.awt.Dimension(770, 659));
 
-        infoMascota.setBackground(new java.awt.Color(204, 204, 204));
+        infoMascota.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel16.setText("Cliente");
@@ -222,25 +363,28 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
                         .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(infoMascotaLayout.createSequentialGroup()
                                 .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, Short.MAX_VALUE))
                             .addGroup(infoMascotaLayout.createSequentialGroup()
                                 .addComponent(txtRaza, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
-                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(RadioCastrado, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(infoMascotaLayout.createSequentialGroup()
-                        .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(BoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, infoMascotaLayout.createSequentialGroup()
+                        .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(infoMascotaLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(infoMascotaLayout.createSequentialGroup()
+                                .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(BoxEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(32, 32, 32)
                         .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(BoxSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -280,10 +424,10 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14)
                     .addComponent(txtRaza, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel14))
+                .addGap(24, 24, 24)
                 .addGroup(infoMascotaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(RadioCastrado)
                     .addComponent(txtEdad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -291,38 +435,114 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
                 .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        checkBox.setBackground(new java.awt.Color(204, 204, 204));
+        panelAlergias.setBackground(new java.awt.Color(204, 204, 204));
 
-        javax.swing.GroupLayout checkBoxLayout = new javax.swing.GroupLayout(checkBox);
-        checkBox.setLayout(checkBoxLayout);
-        checkBoxLayout.setHorizontalGroup(
-            checkBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 740, Short.MAX_VALUE)
+        javax.swing.GroupLayout panelAlergiasLayout = new javax.swing.GroupLayout(panelAlergias);
+        panelAlergias.setLayout(panelAlergiasLayout);
+        panelAlergiasLayout.setHorizontalGroup(
+            panelAlergiasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
-        checkBoxLayout.setVerticalGroup(
-            checkBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 249, Short.MAX_VALUE)
+        panelAlergiasLayout.setVerticalGroup(
+            panelAlergiasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("VACUNAS");
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("ALERGIAS");
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("ENFERMEDADES");
+
+        panelEnfermedades.setBackground(new java.awt.Color(204, 204, 204));
+
+        javax.swing.GroupLayout panelEnfermedadesLayout = new javax.swing.GroupLayout(panelEnfermedades);
+        panelEnfermedades.setLayout(panelEnfermedadesLayout);
+        panelEnfermedadesLayout.setHorizontalGroup(
+            panelEnfermedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelEnfermedadesLayout.setVerticalGroup(
+            panelEnfermedadesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        panelVacunas.setBackground(new java.awt.Color(204, 204, 204));
+
+        javax.swing.GroupLayout panelVacunasLayout = new javax.swing.GroupLayout(panelVacunas);
+        panelVacunas.setLayout(panelVacunasLayout);
+        panelVacunasLayout.setHorizontalGroup(
+            panelVacunasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelVacunasLayout.setVerticalGroup(
+            panelVacunasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 140, Short.MAX_VALUE)
+        );
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "TIPO", "FECHA", "PERSONAL", "DIAGNOSTICO", "OBSERVACIONES"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout historialLayout = new javax.swing.GroupLayout(historial);
         historial.setLayout(historialLayout);
         historialLayout.setHorizontalGroup(
             historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, historialLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelAlergias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addGroup(historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                    .addComponent(panelEnfermedades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addGroup(historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelVacunas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE))
+                .addGap(30, 30, 30))
             .addGroup(historialLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(infoMascota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
+                    .addComponent(infoMascota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         historialLayout.setVerticalGroup(
             historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(historialLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(9, 9, 9)
                 .addComponent(infoMascota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(checkBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(185, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(historialLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(panelVacunas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelEnfermedades, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelAlergias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
         );
 
         jScrollPane2.setViewportView(historial);
@@ -349,149 +569,28 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
             historialMedicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(historialMedicoLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(editarperfil1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addComponent(editarperfil1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                 .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
+                .addGap(36, 36, 36)
                 .addComponent(Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40))
-            .addGroup(historialMedicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, historialMedicoLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)))
+                .addGap(35, 35, 35))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         historialMedicoLayout.setVerticalGroup(
             historialMedicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(historialMedicoLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(historialMedicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(editarperfil1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(680, Short.MAX_VALUE))
-            .addGroup(historialMedicoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, historialMedicoLayout.createSequentialGroup()
-                    .addContainerGap(63, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+                    .addComponent(Cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 612, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         cambio.add(historialMedico, "card3");
-
-        mascotaTabla.setLayout(null);
-
-        scroll.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-
-        tablaMascotas.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Nombre", "Especie", "Raza", "Edad", "Sexo", ""
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tablaMascotas.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablaMascotasMouseClicked(evt);
-            }
-        });
-        scroll.setViewportView(tablaMascotas);
-
-        mascotaTabla.add(scroll);
-        scroll.setBounds(0, 130, 790, 480);
-        mascotaTabla.add(jSeparator1);
-        jSeparator1.setBounds(0, 130, 790, 30);
-
-        txtBuscarMascota.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtBuscarMascota.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtBuscarMascotaActionPerformed(evt);
-            }
-        });
-        txtBuscarMascota.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtBuscarMascotaKeyReleased(evt);
-            }
-        });
-        mascotaTabla.add(txtBuscarMascota);
-        txtBuscarMascota.setBounds(70, 90, 220, 30);
-
-        Eliminar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        Eliminar.setText("Eliminar");
-        Eliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EliminarActionPerformed(evt);
-            }
-        });
-        mascotaTabla.add(Eliminar);
-        Eliminar.setBounds(650, 90, 110, 30);
-
-        HistorialMedico.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        HistorialMedico.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Medical History_1.png"))); // NOI18N
-        HistorialMedico.setText("Historial Medico");
-        HistorialMedico.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        HistorialMedico.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                HistorialMedicoActionPerformed(evt);
-            }
-        });
-        mascotaTabla.add(HistorialMedico);
-        HistorialMedico.setBounds(600, 620, 170, 50);
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Google Web Search_1.png"))); // NOI18N
-        mascotaTabla.add(jLabel2);
-        jLabel2.setBounds(30, 90, 30, 30);
-
-        editarperfil.setFont(new java.awt.Font("Segoe UI Semibold", 1, 24)); // NOI18N
-        editarperfil.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Animal Shelter.png"))); // NOI18N
-        editarperfil.setText("   MASCOTAS");
-        mascotaTabla.add(editarperfil);
-        editarperfil.setBounds(20, 20, 270, 60);
-
-        Nuevo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        Nuevo.setText("Nuevo");
-        Nuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NuevoActionPerformed(evt);
-            }
-        });
-        mascotaTabla.add(Nuevo);
-        Nuevo.setBounds(520, 90, 110, 30);
-
-        cambio.add(mascotaTabla, "card2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -504,27 +603,78 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(cambio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(9, 9, 9))
         );
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void cargarCheckboxesPorEspecie(String especieSeleccionada) {
+        panelAlergias.removeAll();
+        panelEnfermedades.removeAll();
+        panelVacunas.removeAll();
 
+        panelAlergias.setLayout(new BoxLayout(panelAlergias, BoxLayout.Y_AXIS));
+        panelEnfermedades.setLayout(new BoxLayout(panelEnfermedades, BoxLayout.Y_AXIS));
+        panelVacunas.setLayout(new BoxLayout(panelVacunas, BoxLayout.Y_AXIS));
+        try {
+
+            HistorialMedico historialMedico = new HistorialMedico();
+            List<String> alergias = historialMedico.obtenerAlergiasPorEspecie(especieSeleccionada);
+            List<String> enfermedades = historialMedico.obtenerEnfermedadesPorEspecie(especieSeleccionada);
+            List<String> vacunas = historialMedico.obtenerVacunasPorEspecie(especieSeleccionada);
+
+            System.out.println("Alergias: " + alergias);
+            System.out.println("Enfermedades: " + enfermedades);
+            System.out.println("Vacunas: " + vacunas);
+
+            for (String vacuna : vacunas) {
+                JCheckBox checkBoxVacuna = new JCheckBox(vacuna);
+                panelVacunas.add(checkBoxVacuna);
+            }
+
+            for (String alergia : alergias) {
+                JCheckBox checkBoxAlergia = new JCheckBox(alergia);
+                panelAlergias.add(checkBoxAlergia);
+            }
+
+            for (String enfermedad : enfermedades) {
+                JCheckBox checkBoxEnfermedad = new JCheckBox(enfermedad);
+                panelEnfermedades.add(checkBoxEnfermedad);
+            }
+
+            panelAlergias.revalidate();
+            panelAlergias.repaint();
+            panelVacunas.revalidate();
+            panelVacunas.repaint();
+            panelEnfermedades.revalidate();
+            panelEnfermedades.repaint();
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar los checkboxes: " + e.getMessage());
+        }
+    }
+
+    
     private void tablaMascotasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMascotasMouseClicked
     int row = tablaMascotas.getSelectedRow();
     if (row >= 0) {
         idMascotaSeleccionada = (Integer) tablaMascotas.getValueAt(row, 0);
         System.out.println("ID Mascota: " + idMascotaSeleccionada);
         controlador.mostrarInfoMascota(idMascotaSeleccionada);
+        cargarSeleccion();
     }
     }//GEN-LAST:event_tablaMascotasMouseClicked
 
+    
+    
     private void txtBuscarMascotaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarMascotaKeyReleased
         String nombreMascota = txtBuscarMascota.getText().trim();
         controlador.buscarMascotas(nombreMascota, tablaMascotas);
     }//GEN-LAST:event_txtBuscarMascotaKeyReleased
 
+    
     private void EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarActionPerformed
         int confirmation = JOptionPane.showConfirmDialog(this, "¿Estás seguro de que deseas eliminar esta mascota?", 
                                                  "Confirmación de eliminación", JOptionPane.YES_NO_OPTION);
@@ -558,16 +708,16 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
     }//GEN-LAST:event_txtBuscarMascotaActionPerformed
 
     private void BoxEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BoxEspecieActionPerformed
-        
+        String especieSeleccionada = (String) BoxEspecie.getSelectedItem();
+        cargarCheckboxesPorEspecie(especieSeleccionada);
     }//GEN-LAST:event_BoxEspecieActionPerformed
 
     private void RadioCastradoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RadioCastradoActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_RadioCastradoActionPerformed
 
     private void GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarActionPerformed
-try {
-        // Captura los datos de la mascota
+    try {
         String nombreMascota = txtNombre.getText();
         String raza = txtRaza.getText();
         int edad = Integer.parseInt(txtEdad.getText());
@@ -575,7 +725,6 @@ try {
         String color = txtColor.getText();
         double peso = Double.parseDouble(txtPeso.getText());
 
-    
         String fechaNacimientoTexto = txtNacimiento.getText();
         java.sql.Date fechaNacimiento = null;
         
@@ -584,31 +733,25 @@ try {
             java.util.Date parsedDate = originalFormat.parse(fechaNacimientoTexto);
             fechaNacimiento = new java.sql.Date(parsedDate.getTime());
         }
-
         if (nombreMascota.isEmpty() || raza.isEmpty() || txtEdad.getText().isEmpty() || txtPeso.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
             return;
         }
 
-        // Obtener el ID del cliente a partir del nombre y apellido
         String nombreCliente = txtCliente.getText();
-        String[] nombreApellido = nombreCliente.split(" ", 2);  // Separar nombre y apellido
-
+        String[] nombreApellido = nombreCliente.split(" ", 2);
         if (nombreApellido.length < 2) {
             JOptionPane.showMessageDialog(this, "Debe ingresar nombre y apellido del cliente.");
             return;
         }
-
+        
         String nombre = nombreApellido[0]; 
         String apellido = nombreApellido[1];  
-        int idCliente = Cliente.obtenerIdClientePorNombreApellido(nombre, apellido);
-        
+        int idCliente = Cliente.obtenerIdClientePorNombreApellido(nombre, apellido);       
         if (idCliente == -1) {
             JOptionPane.showMessageDialog(this, "Cliente no encontrado. Verifique los datos.");
             return;
         }
-
-        // Obtener el ID de la especie
         String especieSeleccionada = (String) BoxEspecie.getSelectedItem();
         int especie = Mascota.obtenerIdEspeciePorNombre(especieSeleccionada);
         
@@ -616,7 +759,6 @@ try {
             JOptionPane.showMessageDialog(this, "Especie no válida seleccionada.");
             return;
         }
-
         Mascota mascota = new Mascota(
             idMascotaSeleccionada,
             nombreMascota, 
@@ -630,8 +772,9 @@ try {
             RadioCastrado.isSelected(),  
             idCliente
         );
-
+        guardarSeleccion();
         controlador.guardarCambios(mascota);
+        
         JOptionPane.showMessageDialog(this, "Cambios guardados con éxito");
         CardLayout cardLayout = (CardLayout) cambio.getLayout();
         cardLayout.show(cambio, "MASCOTAS");
@@ -640,13 +783,222 @@ try {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Ocurrió un error al guardar los cambios.");
         }
-
     }//GEN-LAST:event_GuardarActionPerformed
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed
         CardLayout cardLayout = (CardLayout) cambio.getLayout();
         cardLayout.show(cambio, "MASCOTAS");
     }//GEN-LAST:event_CancelarActionPerformed
+    
+    private void eliminarAtributosDesmarcados(int idMascota, String tipoAtributo) {
+    try {
+        String query = "";
+        if (tipoAtributo.equals("alergia")) {
+            query = "DELETE FROM MascotaAlergia WHERE idMascota = ?";
+        } else if (tipoAtributo.equals("enfermedad")) {
+            query = "DELETE FROM MascotaEnfermedad WHERE idMascota = ?";
+        } else if (tipoAtributo.equals("vacuna")) {
+            query = "DELETE FROM MascotaVacuna WHERE idMascota = ?";
+        }
+
+        PreparedStatement pst = Conexion.conectar().prepareStatement(query);
+        pst.setInt(1, idMascota);
+        pst.executeUpdate();
+        pst.close();
+    } catch (SQLException e) {
+        System.err.println("Error al eliminar las asociaciones desmarcadas: " + e.getMessage());
+    }
+}
+
+    private void guardarSeleccion() {
+    try {
+        
+        eliminarAtributosDesmarcados(idMascotaSeleccionada, "alergia");
+        eliminarAtributosDesmarcados(idMascotaSeleccionada, "enfermedad");
+        eliminarAtributosDesmarcados(idMascotaSeleccionada, "vacuna");
+
+        for (Component componente : panelAlergias.getComponents()) {
+            if (componente instanceof JCheckBox) {
+                JCheckBox checkBox = (JCheckBox) componente;
+                if (checkBox.isSelected()) {
+                    String alergia = checkBox.getText();
+                    int idAlergia = obtenerIdAtributo("alergia", alergia);
+                    agregarAtributoAMascota(idMascotaSeleccionada, idAlergia, "alergia");
+                }
+            }
+        }
+
+        for (Component componente : panelEnfermedades.getComponents()) {
+            if (componente instanceof JCheckBox) {
+                JCheckBox checkBox = (JCheckBox) componente;
+                if (checkBox.isSelected()) {
+                    String enfermedad = checkBox.getText();
+                    int idEnfermedad = obtenerIdAtributo("enfermedad", enfermedad);
+                    agregarAtributoAMascota(idMascotaSeleccionada, idEnfermedad, "enfermedad");
+                }
+            }
+        }
+
+        for (Component componente : panelVacunas.getComponents()) {
+            if (componente instanceof JCheckBox) {
+                JCheckBox checkBox = (JCheckBox) componente;
+                if (checkBox.isSelected()) {
+                    String vacuna = checkBox.getText();
+                    int idVacuna = obtenerIdAtributo("vacuna", vacuna); 
+                    agregarAtributoAMascota(idMascotaSeleccionada, idVacuna, "vacuna");
+                }
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Se han guardado correctamente las selecciones.");
+    } catch (Exception e) {
+        System.err.println("Error al guardar las selecciones: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Hubo un error al guardar las selecciones.");
+    }
+}
+
+    private void cargarSeleccion() {
+    try {
+        String queryAlergias = "SELECT a.nombre FROM MascotaAlergia ma " +
+                               "JOIN Alergia a ON ma.idAlergia = a.idAlergia WHERE ma.idMascota = ?";
+        PreparedStatement pstAlergias = Conexion.conectar().prepareStatement(queryAlergias);
+        pstAlergias.setInt(1, idMascotaSeleccionada); 
+        ResultSet rsAlergias = pstAlergias.executeQuery();
+
+        while (rsAlergias.next()) {
+            String alergia = rsAlergias.getString("nombre");
+            for (Component componente : panelAlergias.getComponents()) {
+                if (componente instanceof JCheckBox) {
+                    JCheckBox checkBox = (JCheckBox) componente;
+                    if (checkBox.getText().equals(alergia)) {
+                        checkBox.setSelected(true); 
+                    }
+                }
+            }
+        }
+
+        rsAlergias.close();
+        pstAlergias.close();
+
+        String queryEnfermedades = "SELECT e.nombre FROM MascotaEnfermedad me " +
+                                   "JOIN Enfermedad e ON me.idEnfermedad = e.idEnfermedad WHERE me.idMascota = ?";
+        PreparedStatement pstEnfermedades = Conexion.conectar().prepareStatement(queryEnfermedades);
+        pstEnfermedades.setInt(1, idMascotaSeleccionada);
+        ResultSet rsEnfermedades = pstEnfermedades.executeQuery();
+
+        while (rsEnfermedades.next()) {
+            String enfermedad = rsEnfermedades.getString("nombre");
+            for (Component componente : panelEnfermedades.getComponents()) {
+                if (componente instanceof JCheckBox) {
+                    JCheckBox checkBox = (JCheckBox) componente;
+                    if (checkBox.getText().equals(enfermedad)) {
+                        checkBox.setSelected(true);                      }
+                }
+            }
+        }
+
+        rsEnfermedades.close();
+        pstEnfermedades.close();
+        
+        String queryVacunas = "SELECT v.nombre FROM MascotaVacuna mv " +
+                              "JOIN Vacuna v ON mv.idVacuna = v.idVacuna WHERE mv.idMascota = ?";
+        PreparedStatement pstVacunas = Conexion.conectar().prepareStatement(queryVacunas);
+        pstVacunas.setInt(1, idMascotaSeleccionada);
+        ResultSet rsVacunas = pstVacunas.executeQuery();
+
+        while (rsVacunas.next()) {
+            String vacuna = rsVacunas.getString("nombre");
+            for (Component componente : panelVacunas.getComponents()) {
+                if (componente instanceof JCheckBox) {
+                    JCheckBox checkBox = (JCheckBox) componente;
+                    if (checkBox.getText().equals(vacuna)) {
+                        checkBox.setSelected(true); 
+                    }
+                }
+            }
+        }
+
+        rsVacunas.close();
+        pstVacunas.close();
+
+    } catch (SQLException e) {
+        System.err.println("Error al cargar las selecciones: " + e.getMessage());
+    }
+}
+
+
+    private int obtenerIdAtributo(String tipoAtributo, String nombreAtributo) throws SQLException {
+        Connection conexion = Conexion.conectar();
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+        int idAtributo = -1;
+        try {
+            String query = "";
+            if (tipoAtributo.equals("alergia")) {
+                query = "SELECT idAlergia FROM Alergia WHERE nombre = ?";
+            } else if (tipoAtributo.equals("enfermedad")) {
+                query = "SELECT idEnfermedad FROM Enfermedad WHERE nombre = ?";
+            } else if (tipoAtributo.equals("vacuna")) {
+                query = "SELECT idVacuna FROM Vacuna WHERE nombre = ?";
+            }
+
+            pst = conexion.prepareStatement(query);
+            pst.setString(1, nombreAtributo);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                if (tipoAtributo.equals("alergia")) {
+                    idAtributo = rs.getInt("idAlergia");
+                } else if (tipoAtributo.equals("enfermedad")) {
+                    idAtributo = rs.getInt("idEnfermedad");
+                } else if (tipoAtributo.equals("vacuna")) {
+                    idAtributo = rs.getInt("idVacuna");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el ID del atributo: " + e.getMessage());
+        }
+        return idAtributo;
+    }
+
+    private void eliminarTodasLasAsociaciones(int idMascota) {
+        try {
+            eliminarAtributosDesmarcados(idMascota, "alergia");
+            eliminarAtributosDesmarcados(idMascota, "enfermedad");
+            eliminarAtributosDesmarcados(idMascota, "vacuna");
+        }catch (Exception e) {
+            System.err.println("Error al eliminar las asociaciones: " + e.getMessage());
+        }
+    }
+    
+    private void cambiarEspecieMascota(int idMascota, String nuevaEspecie) {
+        try {
+            eliminarTodasLasAsociaciones(idMascota);
+            actualizarEspecieMascota(idMascota, nuevaEspecie);
+            guardarSeleccion();
+            JOptionPane.showMessageDialog(null, "Se ha cambiado la especie y guardado correctamente las selecciones.");
+        } catch (SQLException e) {
+            System.err.println("Error al cambiar la especie de la mascota: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Hubo un error al cambiar la especie.");
+        }
+    }
+
+    private void actualizarEspecieMascota(int idMascota, String nuevaEspecie) throws SQLException {
+        Connection conexion = Conexion.conectar();
+        PreparedStatement pst = null;
+        try {
+            String query = "UPDATE Mascota SET especie = ? WHERE idMascota = ?";
+            pst = conexion.prepareStatement(query);
+            pst.setString(1, nuevaEspecie);
+            pst.setInt(2, idMascota);
+            pst.executeUpdate();
+            pst.close();
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar la especie de la mascota: " + e.getMessage());
+            throw e; 
+    }
+    }
+
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -659,7 +1011,6 @@ try {
     private javax.swing.JButton Nuevo;
     private javax.swing.JRadioButton RadioCastrado;
     private javax.swing.JPanel cambio;
-    private javax.swing.JPanel checkBox;
     private javax.swing.JLabel editarperfil;
     private javax.swing.JLabel editarperfil1;
     private raven.datetime.component.date.DatePicker fecha;
@@ -675,10 +1026,18 @@ try {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JPanel mascotaTabla;
+    private javax.swing.JPanel panelAlergias;
+    private javax.swing.JPanel panelEnfermedades;
+    private javax.swing.JPanel panelVacunas;
     private javax.swing.JScrollPane scroll;
     private javax.swing.JTable tablaMascotas;
     private javax.swing.JTextField txtBuscarMascota;

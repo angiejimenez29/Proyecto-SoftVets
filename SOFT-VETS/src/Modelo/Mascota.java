@@ -25,6 +25,7 @@ public class Mascota {
     private int idCliente; 
     private String nombreCliente;  
     private String apellidoCliente; 
+    private HistorialMedico historialMedico;
 
 
 
@@ -43,6 +44,7 @@ public class Mascota {
         this.fechaNacimiento = fechaNacimiento;
         this.castrada = castrada;
         this.idCliente = idCliente;
+        this.historialMedico = new HistorialMedico();
     }
   
     public Mascota() {
@@ -422,4 +424,13 @@ public class Mascota {
     private void setApellidoCliente(String apellidoCliente) {
         this.apellidoCliente = apellidoCliente;    
     }
+
+    public HistorialMedico getHistorialMedico() {
+        return historialMedico;
+    }
+
+    public void setHistorialMedico(HistorialMedico historialMedico) {
+        this.historialMedico = historialMedico;
+    }
+    
 }

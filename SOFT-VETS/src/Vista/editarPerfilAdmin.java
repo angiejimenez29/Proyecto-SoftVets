@@ -20,8 +20,6 @@ public class editarPerfilAdmin extends javax.swing.JPanel {
     private String originalContrasena;
 
     
-
-
     public editarPerfilAdmin(Usuario usuario, menuAdmin menuAdmin) {
         this.usuarioAutenticado = usuario;
         this.menuAdmin = menuAdmin; 

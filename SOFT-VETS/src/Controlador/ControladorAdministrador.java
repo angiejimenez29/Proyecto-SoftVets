@@ -136,7 +136,6 @@ public class ControladorAdministrador {
     }
 
     public void actualizarAdministrador(String nuevoNombre, String nuevoApellido, String nuevoTelefono, String nuevoEmail, double nuevoSalario, int idUsuario) {
-
         boolean exito = administrador.actualizarAdmin(nuevoNombre, nuevoApellido, nuevoTelefono, nuevoEmail, nuevoSalario, idUsuario);
         if (exito) {
             JOptionPane.showMessageDialog(null,"Administrador actualizado exitosamente");
