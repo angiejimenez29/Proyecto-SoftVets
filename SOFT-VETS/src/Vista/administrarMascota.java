@@ -285,7 +285,7 @@ public class administrarMascota extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
             return;
         }
-
+        
         String nombreCliente = txtCliente.getText(); 
         String[] nombreApellido = nombreCliente.split(" ", 2);  
 

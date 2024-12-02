@@ -11,6 +11,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -72,15 +75,19 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
     
     public void mostrarDatosMascota(Mascota mascota) {
         txtNombre.setText(mascota.getNombreMascota());
-        BoxEspecie.setSelectedIndex(mascota.getEspecie());  // Asumiendo que el valor de especie es un índice
+        BoxEspecie.setSelectedIndex(mascota.getEspecie());
         txtRaza.setText(mascota.getRaza());
         txtEdad.setText(String.valueOf(mascota.getEdad()));
         BoxSexo.setSelectedItem(mascota.getSexo());
         txtColor.setText(mascota.getColor());
         txtPeso.setText(String.valueOf(mascota.getPeso()));
-        txtNacimiento.setText(mascota.getFechaNacimiento().toString());
         RadioCastrado.setSelected(mascota.isCastrada());
         
+        java.util.Date utilDate = mascota.getFechaNacimiento();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDate = dateFormat.format(utilDate);
+        txtNacimiento.setText(formattedDate);
+
         Cliente cliente = Cliente.obtenerClientePorId(mascota.getIdCliente());
         if (cliente != null) {      
         txtCliente.setText(cliente.getNombre() + " " + cliente.getApellido());
@@ -89,39 +96,6 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
     }
     }
     
-    private void guardarCambiosActionPerformed(java.awt.event.ActionEvent evt) {
-        try {
-        String fechaNacimientoTexto = txtNacimiento.getText();
-        java.sql.Date fechaNacimiento = null;
-        if (!fechaNacimientoTexto.isEmpty()) {
-            fechaNacimiento = java.sql.Date.valueOf(fechaNacimientoTexto);
-        }
-         
-         Mascota mascota = new Mascota(
-            idMascotaSeleccionada,
-            txtNombre.getText(),
-            BoxEspecie.getSelectedIndex(),
-            txtRaza.getText(),
-            Integer.parseInt(txtEdad.getText()),
-            (String) BoxSexo.getSelectedItem(),
-            txtColor.getText(),
-            Double.parseDouble(txtPeso.getText()),
-            fechaNacimiento,  
-            RadioCastrado.isSelected(),
-            1 
-        );
-        
-        controlador.guardarCambios(mascota);
-            JOptionPane.showMessageDialog(this, "Cambios guardados con éxito");
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, "Error en el formato de la fecha. Use el formato yyyy-MM-dd.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Ocurrió un error al guardar los cambios.");
-        }
-    }
-
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -592,7 +566,81 @@ public class gestionMascotaAdmin extends javax.swing.JPanel {
     }//GEN-LAST:event_RadioCastradoActionPerformed
 
     private void GuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GuardarActionPerformed
-        // TODO add your handling code here:
+try {
+        // Captura los datos de la mascota
+        String nombreMascota = txtNombre.getText();
+        String raza = txtRaza.getText();
+        int edad = Integer.parseInt(txtEdad.getText());
+        String sexo = (String) BoxSexo.getSelectedItem();
+        String color = txtColor.getText();
+        double peso = Double.parseDouble(txtPeso.getText());
+
+    
+        String fechaNacimientoTexto = txtNacimiento.getText();
+        java.sql.Date fechaNacimiento = null;
+        
+        if (!fechaNacimientoTexto.isEmpty()) {
+            SimpleDateFormat originalFormat = new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date parsedDate = originalFormat.parse(fechaNacimientoTexto);
+            fechaNacimiento = new java.sql.Date(parsedDate.getTime());
+        }
+
+        if (nombreMascota.isEmpty() || raza.isEmpty() || txtEdad.getText().isEmpty() || txtPeso.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
+            return;
+        }
+
+        // Obtener el ID del cliente a partir del nombre y apellido
+        String nombreCliente = txtCliente.getText();
+        String[] nombreApellido = nombreCliente.split(" ", 2);  // Separar nombre y apellido
+
+        if (nombreApellido.length < 2) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar nombre y apellido del cliente.");
+            return;
+        }
+
+        String nombre = nombreApellido[0]; 
+        String apellido = nombreApellido[1];  
+        int idCliente = Cliente.obtenerIdClientePorNombreApellido(nombre, apellido);
+        
+        if (idCliente == -1) {
+            JOptionPane.showMessageDialog(this, "Cliente no encontrado. Verifique los datos.");
+            return;
+        }
+
+        // Obtener el ID de la especie
+        String especieSeleccionada = (String) BoxEspecie.getSelectedItem();
+        int especie = Mascota.obtenerIdEspeciePorNombre(especieSeleccionada);
+        
+        if (especie == -1) {
+            JOptionPane.showMessageDialog(this, "Especie no válida seleccionada.");
+            return;
+        }
+
+        Mascota mascota = new Mascota(
+            idMascotaSeleccionada,
+            nombreMascota, 
+            especie, 
+            raza, 
+            edad, 
+            sexo, 
+            color, 
+            peso, 
+            fechaNacimiento,  
+            RadioCastrado.isSelected(),  
+            idCliente
+        );
+
+        controlador.guardarCambios(mascota);
+        JOptionPane.showMessageDialog(this, "Cambios guardados con éxito");
+        CardLayout cardLayout = (CardLayout) cambio.getLayout();
+        cardLayout.show(cambio, "MASCOTAS");
+        controlador.mostrarMascotas(tablaMascotas);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Ocurrió un error al guardar los cambios.");
+        }
+
     }//GEN-LAST:event_GuardarActionPerformed
 
     private void CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarActionPerformed

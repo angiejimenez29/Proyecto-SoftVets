@@ -92,7 +92,6 @@ public class Mascota {
             ResultSet rs = pst.executeQuery();
                 
             if (rs.next()) {
-            // Mapeo de la especie
             int especieDb = rs.getInt("especie");
             int especieIndex = 0;
 
@@ -157,9 +156,11 @@ public class Mascota {
 
 
     public static boolean actualizarMascota(Mascota mascota) {
-        String query = "UPDATE Mascotas SET nombreMascota = ?, especie = ?, raza = ?, edad = ?, sexo = ?, color = ?, peso = ?, fechaNacimiento = ?, castrada = ?, idCliente = ? WHERE idMascota = ?";
-        try (Connection con = Conexion.conectar(); 
-             PreparedStatement ps = con.prepareStatement(query)) {
+        Connection conexion = Conexion.conectar(); // Conexión fuera del bloque try
+
+        try {
+            String query = "UPDATE Mascota SET nombreMascota = ?, especie = ?, raza = ?, edad = ?, sexo = ?, color = ?, peso = ?, fechaNacimiento = ?, castrada = ?, idCliente = ? WHERE idMascota = ?";
+            PreparedStatement ps = conexion.prepareStatement(query);
             ps.setString(1, mascota.getNombreMascota());
             ps.setInt(2, mascota.getEspecie());
             ps.setString(3, mascota.getRaza());
@@ -171,6 +172,7 @@ public class Mascota {
             ps.setBoolean(9, mascota.isCastrada());
             ps.setInt(10, mascota.getIdCliente());
             ps.setInt(11, mascota.getIdMascota());
+
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
