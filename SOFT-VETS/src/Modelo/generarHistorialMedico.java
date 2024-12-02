@@ -10,16 +10,15 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import javax.swing.JOptionPane;
-import java.io.InputStream;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfGState;
-
+import javax.swing.JCheckBox;
+import java.awt.Component;
+import javax.swing.JPanel;
 
 public class generarHistorialMedico {
-    
+
     public void generarPDF(
         String ruta,
         String nombreMascota,
@@ -31,7 +30,10 @@ public class generarHistorialMedico {
         double peso,
         boolean castrado,
         String fechaNacimiento,
-        String propietario
+        String propietario,
+        javax.swing.JPanel panelAlergias,
+        javax.swing.JPanel panelEnfermedades,
+        javax.swing.JPanel panelVacunas
     ) {
         try {
             Document document = new Document();
@@ -55,8 +57,7 @@ public class generarHistorialMedico {
             document.add(subtitulo);
 
             document.add(new Paragraph(" "));
-            
-            // Contenido
+
             Font contenidoFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
             document.add(new Paragraph("Propietario: " + propietario, contenidoFont));
             document.add(new Paragraph("Nombre de la Mascota: " + nombreMascota, contenidoFont));
@@ -69,14 +70,37 @@ public class generarHistorialMedico {
             document.add(new Paragraph("Castrado: " + (castrado ? "Sí" : "No"), contenidoFont));
             document.add(new Paragraph("Fecha de Nacimiento: " + fechaNacimiento, contenidoFont));
             
-            agregarMarcaDeAgua(writer, "/imagenlogo/icono.png");
-            
-            document.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+        document.add(new Paragraph("Alergias:", contenidoFont));
+        agregarCheckboxesComoTexto(panelAlergias, document);
+
+        document.add(new Paragraph("Enfermedades:", contenidoFont));
+        agregarCheckboxesComoTexto(panelEnfermedades, document);
+
+        document.add(new Paragraph("Vacunas:", contenidoFont));
+        agregarCheckboxesComoTexto(panelVacunas, document);
+
+        agregarMarcaDeAgua(writer, "/imagenlogo/icono.png");
+
+        document.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+    private void agregarCheckboxesComoTexto(JPanel panel, Document document) {
+        Font checkboxFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+        for (Component componente : panel.getComponents()) {
+            if (componente instanceof JCheckBox) {
+                JCheckBox checkBox = (JCheckBox) componente;
+                String estado = checkBox.isSelected() ? "\u2714" : "\u2610";
+                try {
+                    document.add(new Paragraph(estado + " " + checkBox.getText(), checkboxFont));
+                } catch (DocumentException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-    
     private void agregarMarcaDeAgua(PdfWriter writer, String rutaMarca) {
         try {
             InputStream marcaStream = getClass().getResourceAsStream(rutaMarca);

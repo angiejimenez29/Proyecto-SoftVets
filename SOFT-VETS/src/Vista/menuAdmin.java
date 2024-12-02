@@ -28,8 +28,8 @@ public class menuAdmin extends javax.swing.JFrame {
         cambio.add(menuPrincipal, "Menu Principal");
         cambio.add(new gestionClienteAdmin(), "GESTION CLIENTE");
         cambio.add(new gestionMascotaAdmin(), "GESTION MASCOTAS");
-        selectButton(inicio);
-        inicioActionPerformed(null);
+        selectButton(clientes);
+        clientesActionPerformed(null);
         
     }
     public void actualizarNombreApellido(String nombre, String apellido) {
@@ -44,7 +44,6 @@ public class menuAdmin extends javax.swing.JFrame {
         menu = new javax.swing.JPanel();
         nombreApellido = new javax.swing.JLabel();
         perfilEditar = new javax.swing.JButton();
-        inicio = new javax.swing.JButton();
         mascotas = new javax.swing.JButton();
         cerrarsesion = new javax.swing.JButton();
         citas = new javax.swing.JButton();
@@ -55,8 +54,6 @@ public class menuAdmin extends javax.swing.JFrame {
         personal = new javax.swing.JButton();
         cambio = new javax.swing.JPanel();
         menuPrincipal = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Soft Vets");
@@ -106,22 +103,6 @@ public class menuAdmin extends javax.swing.JFrame {
         menu.add(perfilEditar);
         perfilEditar.setBounds(50, 80, 170, 190);
 
-        inicio.setBackground(new java.awt.Color(209, 209, 209));
-        inicio.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
-        inicio.setForeground(new java.awt.Color(51, 51, 51));
-        inicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenlogo/Home_10.png"))); // NOI18N
-        inicio.setText("          Menú principal");
-        inicio.setBorderPainted(false);
-        inicio.setHideActionText(true);
-        inicio.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        inicio.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inicioActionPerformed(evt);
-            }
-        });
-        menu.add(inicio);
-        inicio.setBounds(14, 280, 230, 50);
-
         mascotas.setBackground(new java.awt.Color(209, 209, 209));
         mascotas.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
         mascotas.setForeground(new java.awt.Color(51, 51, 51));
@@ -136,7 +117,7 @@ public class menuAdmin extends javax.swing.JFrame {
             }
         });
         menu.add(mascotas);
-        mascotas.setBounds(14, 380, 230, 50);
+        mascotas.setBounds(15, 340, 230, 50);
 
         cerrarsesion.setBackground(new java.awt.Color(209, 209, 209));
         cerrarsesion.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
@@ -152,7 +133,7 @@ public class menuAdmin extends javax.swing.JFrame {
             }
         });
         menu.add(cerrarsesion);
-        cerrarsesion.setBounds(14, 530, 230, 50);
+        cerrarsesion.setBounds(15, 490, 230, 50);
 
         citas.setBackground(new java.awt.Color(209, 209, 209));
         citas.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
@@ -168,7 +149,7 @@ public class menuAdmin extends javax.swing.JFrame {
             }
         });
         menu.add(citas);
-        citas.setBounds(14, 480, 230, 50);
+        citas.setBounds(15, 440, 230, 50);
 
         Salir.setBackground(new java.awt.Color(93, 193, 185));
         Salir.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -211,7 +192,7 @@ public class menuAdmin extends javax.swing.JFrame {
             }
         });
         menu.add(clientes);
-        clientes.setBounds(14, 330, 230, 50);
+        clientes.setBounds(15, 290, 230, 50);
 
         personal.setBackground(new java.awt.Color(209, 209, 209));
         personal.setFont(new java.awt.Font("Segoe UI Semibold", 1, 14)); // NOI18N
@@ -227,7 +208,7 @@ public class menuAdmin extends javax.swing.JFrame {
             }
         });
         menu.add(personal);
-        personal.setBounds(14, 430, 230, 50);
+        personal.setBounds(15, 390, 230, 50);
 
         fondo.add(menu, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 5, 260, 710));
 
@@ -236,34 +217,15 @@ public class menuAdmin extends javax.swing.JFrame {
 
         menuPrincipal.setPreferredSize(new java.awt.Dimension(840, 720));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
         javax.swing.GroupLayout menuPrincipalLayout = new javax.swing.GroupLayout(menuPrincipal);
         menuPrincipal.setLayout(menuPrincipalLayout);
         menuPrincipalLayout.setHorizontalGroup(
             menuPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuPrincipalLayout.createSequentialGroup()
-                .addGap(44, 44, 44)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+            .addGap(0, 820, Short.MAX_VALUE)
         );
         menuPrincipalLayout.setVerticalGroup(
             menuPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(menuPrincipalLayout.createSequentialGroup()
-                .addGap(118, 118, 118)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(487, Short.MAX_VALUE))
+            .addGap(0, 720, Short.MAX_VALUE)
         );
 
         cambio.add(menuPrincipal, "card3");
@@ -288,7 +250,6 @@ public class menuAdmin extends javax.swing.JFrame {
     private Color defaultColor = new Color(209, 209, 209); 
     
     private void selectButton(javax.swing.JButton button) {
-    inicio.setBackground(defaultColor);
     mascotas.setBackground(defaultColor);
     citas.setBackground(defaultColor);
     cerrarsesion.setBackground(defaultColor);
@@ -316,11 +277,6 @@ public class menuAdmin extends javax.swing.JFrame {
         mostrarPanel("EDITAR PERFIL");
     }//GEN-LAST:event_perfilEditarActionPerformed
 
-    private void inicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inicioActionPerformed
-        selectButton(inicio);
-        mostrarPanel("Menu Principal");
-    }//GEN-LAST:event_inicioActionPerformed
-
     private void mascotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mascotasActionPerformed
         selectButton(mascotas);
         mostrarPanel("GESTION MASCOTAS");
@@ -336,6 +292,8 @@ public class menuAdmin extends javax.swing.JFrame {
 
     private void citasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_citasActionPerformed
         selectButton(citas);
+        RegistrarCita newframe= new RegistrarCita ();   
+        newframe.setVisible(true);
     }//GEN-LAST:event_citasActionPerformed
 
     private void SalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SalirActionPerformed
@@ -371,9 +329,6 @@ public class menuAdmin extends javax.swing.JFrame {
     private javax.swing.JButton citas;
     private javax.swing.JButton clientes;
     private javax.swing.JPanel fondo;
-    private javax.swing.JButton inicio;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JButton mascotas;
     private javax.swing.JPanel menu;
     private javax.swing.JPanel menuPrincipal;

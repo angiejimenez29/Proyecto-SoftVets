@@ -2,7 +2,9 @@ package Vista;
 
 import Controlador.ControladorAdministrador;
 import Modelo.Administrador;
+import Vista.RegistrarPersonal;
 import Modelo.Cliente;
+import Modelo.Personal;
 import com.formdev.flatlaf.FlatClientProperties;
 import java.awt.CardLayout;
 import java.util.List;
@@ -12,10 +14,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import Controlador.ControladorPersonal;
+import java.util.Date;
 
 public class gestionPersonalAdmin extends javax.swing.JPanel {
     private ControladorAdministrador controlador;
+    private ControladorPersonal controladorPersonal;
+    private Personal personaL;
     private Administrador administrador;
+    private Integer idPersonalSeleccionado;
     private Integer idUsuarioSeleccionado;
     private String nombreOriginal, apellidoOriginal, telefonoOriginal, emailOriginal;
     private double salarioOriginal;
@@ -24,13 +32,26 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         initComponents();
         init();
 
+        // Se asume que 'controlador' es el controlador general para administradores y personal
         controlador = new ControladorAdministrador(new Administrador());
-        controlador.mostrarAdministradores(tablaAdmin);
+
+        // Creación de ControladorPersonal (para tabla de personal)
+        controladorPersonal = new ControladorPersonal();  // Asignando la tabla personal al controlador
+
+        // Mostrar los datos en las tablas
+        controlador.mostrarAdministradores(tablaAdmin);   // Método para mostrar datos de administradores
+        controladorPersonal.mostrarPersonal(tablaPersonal); // Método para mostrar datos de personal
+
+        // Configurar las vistas de los paneles para "EDITAR" y "REGISTRAR"
         cambio.add(editarAdmin, "EDITAR");
-        cambio.add(registrarAdmin, "REGISTRAR");       
+        cambio.add(registrarAdmin, "REGISTRAR");   
     }
-    
+
     private void init(){
+        
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER); // Centrar los textos
+        tablaPersonal.setDefaultRenderer(Object.class, renderer);
         
         ImageIcon img1 = new ImageIcon(getClass().getResource("/imagenlogo/User Account_1.png"));
         ImageIcon tamaño = new ImageIcon(img1.getImage().getScaledInstance(50, 45,1));
@@ -189,51 +210,49 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
 
         tablaPersonal.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "", "Nombre", "Especialidad", "Telefono", "Contrato", "Horario", "Salario"
+                "Nombre", "Especialidad", "Telefono", "Contrato", "Turno", "Salario"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tablaPersonal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPersonalMouseClicked(evt);
             }
         });
         scroll.setViewportView(tablaPersonal);
@@ -256,7 +275,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         Eliminar.setText("Eliminar");
         Eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                EliminarActionPerformed(evt);
+                eliminarPersonal(evt);
             }
         });
         personalTabla.add(Eliminar);
@@ -266,7 +285,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         Nuevo.setText("Nuevo");
         Nuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                NuevoActionPerformed(evt);
+                nuevoPersonal(evt);
             }
         });
         personalTabla.add(Nuevo);
@@ -274,6 +293,11 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
 
         Editar.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Editar.setText("Editar");
+        Editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarPersonal(evt);
+            }
+        });
         personalTabla.add(Editar);
         Editar.setBounds(490, 10, 110, 30);
 
@@ -653,16 +677,50 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
     }
     
     private void txtBuscarPersonalPersonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarPersonalPersonalActionPerformed
-        // TODO add your handling code here:
+        String nombreBuscar = txtBuscarPersonal.getText().trim();
+        controladorPersonal.buscarPersonal(nombreBuscar, tablaPersonal);
     }//GEN-LAST:event_txtBuscarPersonalPersonalActionPerformed
 
-    private void EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_EliminarActionPerformed
+    private void eliminarPersonal(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarPersonal
+        // Verificar si hay una fila seleccionada
+        int filaSeleccionada = tablaPersonal.getSelectedRow();
 
-    private void NuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NuevoActionPerformed
-        new RegistrarPersonal().setVisible(true);
-    }//GEN-LAST:event_NuevoActionPerformed
+        if (filaSeleccionada != -1) {
+            // Obtener el ID del personal seleccionado (suponiendo que está en la primera columna de la tabla)
+            int idPersonal = (int) tablaPersonal.getValueAt(filaSeleccionada, 0); // Asumimos que el ID está en la primera columna
+
+            // Confirmación antes de eliminar
+            int confirmacion = JOptionPane.showConfirmDialog(null, 
+                    "¿Estás seguro de que deseas eliminar al personal seleccionado?", 
+                    "Confirmar Eliminación", 
+                    JOptionPane.YES_NO_OPTION, 
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (confirmacion == JOptionPane.YES_OPTION) {
+                // Llamar al método de eliminar en el controlador
+                controladorPersonal.eliminarPersonal(idPersonal);
+
+                // Después de eliminar, actualizar la lista de personal en la tabla
+                controladorPersonal.mostrarPersonal(tablaPersonal);
+            }
+        } else {
+            // Si no se ha seleccionado ninguna fila
+            JOptionPane.showMessageDialog(null, "Por favor, selecciona un personal para eliminar.");
+        }
+    }//GEN-LAST:event_eliminarPersonal
+
+    private void nuevoPersonal(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoPersonal
+        RegistrarPersonal registrarPersonal = new RegistrarPersonal();
+        registrarPersonal.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                System.out.println("Ventana RegistrarPersonal cerrada."); // Diagnóstico
+                controladorPersonal.mostrarPersonal(tablaPersonal);
+            }
+        });
+        registrarPersonal.setVisible(true);
+        controladorPersonal.mostrarPersonal(tablaPersonal); 
+    }//GEN-LAST:event_nuevoPersonal
 
     private void txtBuscarAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarAdminActionPerformed
         // TODO add your handling code here:
@@ -821,6 +879,36 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
         txtEmail1.setText(emailOriginal);
         txtSalario1.setText(String.valueOf(salarioOriginal));
     }//GEN-LAST:event_cancelarEdicionActionPerformed
+
+    private void editarPersonal(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarPersonal
+    
+    }//GEN-LAST:event_editarPersonal
+
+    private void tablaPersonalMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPersonalMouseClicked
+        int row = tablaPersonal.getSelectedRow();
+        if (row >= 0) {
+
+            Integer idPersonal = (Integer) tablaPersonal.getValueAt(row, 0);
+
+            String nombre = (String) tablaPersonal.getValueAt(row, 1);
+
+            String especialidad = (String) tablaPersonal.getValueAt(row, 2);
+
+            String telefono = (String) tablaPersonal.getValueAt(row, 3);
+
+
+            Object fechaObj = tablaPersonal.getValueAt(row, 4);
+            String fechaContratacionFormateada = "N/A";
+            if (fechaObj != null && fechaObj instanceof java.sql.Date) {
+                java.sql.Date fechaContratacion = (java.sql.Date) fechaObj;
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                fechaContratacionFormateada = sdf.format(fechaContratacion);
+            }
+            Double salario = (Double) tablaPersonal.getValueAt(row, 5);
+
+            this.idPersonalSeleccionado = idPersonal;
+        }
+    }//GEN-LAST:event_tablaPersonalMouseClicked
   
     private void guardarDatosAdministrador(int idUsuario) {
         String nombre = txtNombre1.getText();
@@ -836,7 +924,7 @@ public class gestionPersonalAdmin extends javax.swing.JPanel {
 
         double salario = 0;
         try {
-            salario = Double.parseDouble(salarioText.replace(",", ""));  // Limpiar comas y convertir
+            salario = Double.parseDouble(salarioText.replace(",", "")); 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "El salario debe ser un número válido.");
             return;
